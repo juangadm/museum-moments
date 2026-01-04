@@ -32,11 +32,25 @@ function parseMoment(m: {
   description: string;
   tags: string;
   publishedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  ogTitle: string | null;
+  ogSiteName: string | null;
   dominantColor: string | null;
 }): Moment {
   return {
-    ...m,
+    id: m.id,
+    slug: m.slug,
+    title: m.title,
+    category: m.category,
+    creatorName: m.creatorName,
+    creatorUrl: m.creatorUrl,
+    sourceUrl: m.sourceUrl,
+    imageUrl: m.imageUrl,
+    description: m.description,
     tags: JSON.parse(m.tags) as string[],
+    publishedAt: m.publishedAt,
+    dominantColor: m.dominantColor,
   };
 }
 
@@ -61,10 +75,10 @@ export async function getMoments(options?: {
   if (options?.search) {
     const searchLower = options.search.toLowerCase();
     parsed = parsed.filter(
-      (m) =>
+      (m: Moment) =>
         m.title.toLowerCase().includes(searchLower) ||
         m.description.toLowerCase().includes(searchLower) ||
-        m.tags.some((t) => t.toLowerCase().includes(searchLower))
+        m.tags.some((t: string) => t.toLowerCase().includes(searchLower))
     );
   }
 
