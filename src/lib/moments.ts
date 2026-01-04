@@ -131,8 +131,8 @@ export async function getRelatedMoments(
   const parsed = allMoments.map(parseMoment);
 
   // Score by shared tags
-  const scored = parsed.map((m) => {
-    const sharedTags = m.tags.filter((t) => tags.includes(t)).length;
+  const scored = parsed.map((m: Moment) => {
+    const sharedTags = m.tags.filter((t: string) => tags.includes(t)).length;
     const sameCategory = m.category === category ? 1 : 0;
     return { moment: m, score: sharedTags * 2 + sameCategory };
   });
