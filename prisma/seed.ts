@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { extractDominantColor } from "../src/lib/color-extractor";
 
 const prisma = new PrismaClient();
 
@@ -141,10 +142,18 @@ async function main() {
   console.log("Seeding database...");
 
   for (const moment of moments) {
+    // Extract dominant color from image
+    let dominantColor: string | null = null;
+    if (moment.imageUrl) {
+      console.log(`Extracting color from: ${moment.slug}`);
+      dominantColor = await extractDominantColor(moment.imageUrl);
+      console.log(`  → ${dominantColor}`);
+    }
+
     await prisma.moment.upsert({
       where: { slug: moment.slug },
-      update: moment,
-      create: moment,
+      update: { ...moment, dominantColor },
+      create: { ...moment, dominantColor },
     });
   }
 

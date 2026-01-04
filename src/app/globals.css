@@ -12,6 +12,11 @@
   --foreground-muted: #666666;
   --border: #e5e5e5;
   --border-strong: #d4d4d4;
+
+  /* Rounding - designgeist inspired */
+  --rounding-sm: 8px;
+  --rounding-md: 12px;
+  --rounding-lg: 16px;
 }
 
 @theme inline {
@@ -22,6 +27,9 @@
   --color-border-strong: var(--border-strong);
   --font-display: var(--font-display);
   --font-body: var(--font-body);
+  --radius-sm: var(--rounding-sm);
+  --radius-md: var(--rounding-md);
+  --radius-lg: var(--rounding-lg);
 }
 
 /* Base styles */

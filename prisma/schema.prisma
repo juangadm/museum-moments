@@ -26,6 +26,9 @@ model Moment {
   ogTitle    String?
   ogSiteName String?
 
+  // Extracted from image for hover overlay
+  dominantColor String?
+
   @@index([category])
   @@index([publishedAt])
 }

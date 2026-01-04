@@ -12,6 +12,7 @@ export type Moment = {
   description: string;
   tags: string[];
   publishedAt: Date;
+  dominantColor: string | null;
 };
 
 export type MomentNav = {
@@ -31,6 +32,7 @@ function parseMoment(m: {
   description: string;
   tags: string;
   publishedAt: Date;
+  dominantColor: string | null;
 }): Moment {
   return {
     ...m,

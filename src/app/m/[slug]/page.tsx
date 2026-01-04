@@ -99,7 +99,7 @@ export default async function MomentPage({ params }: Props) {
 
         {/* Hero image */}
         {moment.imageUrl && (
-          <div className="mb-10 border border-border">
+          <div className="mb-10 border border-border rounded-md overflow-hidden">
             <Image
               src={moment.imageUrl}
               alt={moment.title}
@@ -124,7 +124,7 @@ export default async function MomentPage({ params }: Props) {
             {moment.tags.map((tag) => (
               <span
                 key={tag}
-                className="font-display text-[10px] px-3 py-1.5 border border-border text-foreground-muted"
+                className="font-display text-[10px] px-3 py-1.5 border border-border text-foreground-muted rounded-sm"
               >
                 {tag}
               </span>
