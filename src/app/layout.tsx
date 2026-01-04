@@ -45,6 +45,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Juan Gabriel Delgado" }],
   creator: "Juan Gabriel Delgado",
+  icons: {
+    icon: "/icon.svg",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",

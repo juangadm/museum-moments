@@ -162,7 +162,7 @@ export function Header() {
             Museum Moments
           </Link>
           <p className="text-[14px] text-foreground-muted font-body">
-            curated to stop the slop and build the beautiful
+            an exhibition curated to stop the slop and build the beautiful
           </p>
         </div>
 
