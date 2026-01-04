@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Moment" (
-    "id" TEXT NOT NULL PRIMARY KEY,
+    "id" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "category" TEXT NOT NULL,
@@ -10,11 +10,14 @@ CREATE TABLE "Moment" (
     "imageUrl" TEXT,
     "description" TEXT NOT NULL,
     "tags" TEXT NOT NULL DEFAULT '[]',
-    "publishedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "publishedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "ogTitle" TEXT,
-    "ogSiteName" TEXT
+    "ogSiteName" TEXT,
+    "dominantColor" TEXT,
+
+    CONSTRAINT "Moment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
