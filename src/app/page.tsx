@@ -53,15 +53,6 @@ export default async function Home(props: { searchParams: SearchParams }) {
       </Suspense>
 
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="max-w-2xl mb-16">
-          <h1 className="font-display text-sm font-medium mb-4">Archive</h1>
-          <p className="font-body text-lg text-foreground-muted leading-relaxed">
-            A curated collection of design moments worth preserving. Each entry
-            is selected and described by hand. Stop the slop. Build the
-            beautiful.
-          </p>
-        </div>
-
         <Suspense
           fallback={
             <div className="py-24 flex items-center justify-center">

@@ -4,6 +4,7 @@
   /* Typography */
   --font-display: var(--font-inter);
   --font-body: var(--font-liter);
+  --font-logo: var(--font-gupter);
   --tracking-caps: 0.1em;
 
   /* Colors - Restrained palette (Light mode) */
@@ -60,6 +61,14 @@ body {
 .font-body {
   font-family: var(--font-body), Georgia, serif;
   text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Logo text: Gupter Bold */
+.font-logo {
+  font-family: var(--font-gupter), Georgia, serif !important;
+  font-weight: 700;
+  text-transform: uppercase;
   letter-spacing: normal;
 }
 

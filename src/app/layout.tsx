@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Lora } from "next/font/google";
+import { Inter, Lora, Gupter } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
@@ -15,6 +15,14 @@ const inter = Inter({
 // that captures the editorial, museum-catalog feel
 const liter = Lora({
   variable: "--font-liter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Gupter Bold for the Museum Moments logo
+const gupter = Gupter({
+  weight: "700",
+  variable: "--font-gupter",
   subsets: ["latin"],
   display: "swap",
 });
@@ -64,7 +72,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${liter.variable} antialiased`}>
+      <body className={`${inter.variable} ${liter.variable} ${gupter.variable} antialiased`}>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

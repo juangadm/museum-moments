@@ -2,50 +2,67 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border mt-auto">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1">
-            <span className="font-display text-xs font-medium">
-              Museum Moments
-            </span>
-            <span className="font-body text-sm text-foreground-muted">
-              A curated archive of design moments.
-            </span>
-          </div>
-          <nav className="flex items-center gap-6">
-            <Link
-              href="/about"
-              className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/submit"
-              className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors"
-            >
-              Submit
-            </Link>
-            <Link
-              href="/terms"
-              className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/privacy"
-              className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors"
-            >
-              Privacy
-            </Link>
-          </nav>
-        </div>
-        <div className="mt-8 pt-6 border-t border-border">
-          <p className="font-display text-xs text-foreground-muted">
-            Curated by Juan Gabriel Delgado
-          </p>
-        </div>
-      </div>
+    <footer
+      role="contentinfo"
+      className="w-full bg-background text-foreground font-body text-base leading-6"
+    >
+      <nav
+        aria-label="Footer navigation"
+        className="max-w-7xl mx-auto px-6 py-8 flex flex-wrap items-center justify-center gap-6"
+      >
+        <Link
+          href="/"
+          className="font-logo text-[14px] font-medium text-foreground hover:text-foreground-muted transition-colors"
+        >
+          Museum Moments
+        </Link>
+        <Link
+          href="/about"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          About
+        </Link>
+        <a
+          href="https://forms.gle/YOUR_GOOGLE_FORM_ID"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          Submit
+        </a>
+        <a
+          href="https://twitter.com/YOUR_TWITTER_HANDLE"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          Twitter
+        </a>
+        <a
+          href="https://www.threads.net/@YOUR_THREADS_HANDLE"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          Threads
+        </a>
+        <a
+          href="https://YOUR_SUBDOMAIN.substack.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          Substack
+        </a>
+        <a
+          href="https://www.linkedin.com/in/YOUR_LINKEDIN_HANDLE"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
+        >
+          LinkedIn
+        </a>
+      </nav>
     </footer>
   );
 }

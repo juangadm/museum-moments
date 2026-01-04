@@ -157,11 +157,11 @@ export function Header() {
     <header className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* Logo and tagline */}
-        <div className="flex flex-col">
-          <Link href="/" className="font-display text-sm font-medium">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="font-logo text-3xl uppercase">
             Museum Moments
           </Link>
-          <p className="text-[10px] text-foreground-muted font-body mt-0.5">
+          <p className="text-[14px] text-foreground-muted font-body">
             curated to stop the slop and build the beautiful
           </p>
         </div>
