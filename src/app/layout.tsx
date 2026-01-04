@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { Inter, Lora } from "next/font/google";
+import { Header } from "@/components/header";
+import { Footer } from "@/components/footer";
+import "./globals.css";
+
+// Inter for display/UI text (ALL CAPS with tracking)
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Liter is not on Google Fonts - using Lora as a refined serif alternative
+// that captures the editorial, museum-catalog feel
+const liter = Lora({
+  variable: "--font-liter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "Museum Moments",
+    template: "%s — Museum Moments",
+  },
+  description:
+    "A curated archive of design moments. Stop the slop. Build the beautiful.",
+  keywords: [
+    "design",
+    "inspiration",
+    "archive",
+    "curation",
+    "web design",
+    "typography",
+    "branding",
+  ],
+  authors: [{ name: "Juan Gabriel Delgado" }],
+  creator: "Juan Gabriel Delgado",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Museum Moments",
+    title: "Museum Moments",
+    description:
+      "A curated archive of design moments. Stop the slop. Build the beautiful.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Museum Moments",
+    description:
+      "A curated archive of design moments. Stop the slop. Build the beautiful.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={`${inter.variable} ${liter.variable} antialiased`}>
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+      </body>
+    </html>
+  );
+}
