@@ -138,10 +138,10 @@ export async function getRelatedMoments(
   });
 
   // Sort by score, then by date
-  scored.sort((a, b) => {
+  scored.sort((a: { moment: Moment; score: number }, b: { moment: Moment; score: number }) => {
     if (b.score !== a.score) return b.score - a.score;
     return b.moment.publishedAt.getTime() - a.moment.publishedAt.getTime();
   });
 
-  return scored.slice(0, limit).map((s) => s.moment);
+  return scored.slice(0, limit).map((s: { moment: Moment; score: number }) => s.moment);
 }
