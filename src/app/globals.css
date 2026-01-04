@@ -6,7 +6,7 @@
   --font-body: var(--font-liter);
   --tracking-caps: 0.1em;
 
-  /* Colors - Restrained palette */
+  /* Colors - Restrained palette (Light mode) */
   --background: #ffffff;
   --foreground: #1a1a1a;
   --foreground-muted: #666666;
@@ -17,6 +17,15 @@
   --rounding-sm: 8px;
   --rounding-md: 12px;
   --rounding-lg: 16px;
+}
+
+/* Dark mode colors */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --foreground-muted: #a3a3a3;
+  --border: #262626;
+  --border-strong: #404040;
 }
 
 @theme inline {
@@ -74,4 +83,14 @@ a:hover {
 ::selection {
   background: var(--foreground);
   color: var(--background);
+}
+
+/* Hide scrollbar for category filter */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

@@ -40,12 +40,35 @@ function parseMoment(m: {
   };
 }
 
-export async function getMoments(): Promise<Moment[]> {
+export async function getMoments(options?: {
+  category?: string;
+  search?: string;
+}): Promise<Moment[]> {
+  const where: { category?: string; OR?: Array<{ title?: { contains: string }; description?: { contains: string } }> } = {};
+
+  if (options?.category && options.category !== "All") {
+    where.category = options.category;
+  }
+
   const moments = await db.moment.findMany({
+    where,
     orderBy: { publishedAt: "desc" },
   });
 
-  return moments.map(parseMoment);
+  let parsed = moments.map(parseMoment);
+
+  // Client-side search since SQLite doesn't support case-insensitive contains well
+  if (options?.search) {
+    const searchLower = options.search.toLowerCase();
+    parsed = parsed.filter(
+      (m) =>
+        m.title.toLowerCase().includes(searchLower) ||
+        m.description.toLowerCase().includes(searchLower) ||
+        m.tags.some((t) => t.toLowerCase().includes(searchLower))
+    );
+  }
+
+  return parsed;
 }
 
 export async function getMomentBySlug(slug: string): Promise<Moment | null> {
