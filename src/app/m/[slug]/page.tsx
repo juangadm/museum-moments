@@ -99,7 +99,7 @@ export default async function MomentPage({ params }: Props) {
 
         {/* Hero image */}
         {moment.imageUrl && (
-          <div className="mb-10 border border-border rounded-md overflow-hidden">
+          <div className="mb-10 border border-border overflow-hidden">
             <Image
               src={moment.imageUrl}
               alt={moment.title}

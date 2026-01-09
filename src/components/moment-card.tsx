@@ -16,7 +16,7 @@ export function MomentCard({ moment }: MomentCardProps) {
       href={`/m/${moment.slug}`}
       className="block break-inside-avoid mb-6 group"
     >
-      <article className="relative rounded-md overflow-hidden border border-border hover:border-border-strong transition-colors">
+      <article className="relative overflow-hidden border border-border hover:border-border-strong transition-colors">
         {moment.imageUrl && (
           <div className="relative">
             <Image
