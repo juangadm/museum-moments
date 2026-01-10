@@ -29,7 +29,7 @@ async function MomentsGrid({
   }
 
   return (
-    <div className="columns-1 sm:columns-2 lg:columns-3 gap-6">
+    <div className="columns-1 sm:columns-2 lg:columns-4 gap-3">
       {moments.map((moment) => (
         <MomentCard key={moment.id} moment={moment} />
       ))}
@@ -52,11 +52,13 @@ export default async function Home(props: { searchParams: SearchParams }) {
 
   return (
     <>
-      <Suspense fallback={null}>
-        <CategoryFilter count={count} />
-      </Suspense>
+      <div>
+        <Suspense fallback={null}>
+          <CategoryFilter count={count} />
+        </Suspense>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="px-3 py-16">
         <Suspense
           fallback={
             <div className="py-24 flex items-center justify-center">
