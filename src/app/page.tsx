@@ -52,11 +52,13 @@ export default async function Home(props: { searchParams: SearchParams }) {
 
   return (
     <>
-      <Suspense fallback={null}>
-        <CategoryFilter count={count} />
-      </Suspense>
+      <div className="mt-1.5">
+        <Suspense fallback={null}>
+          <CategoryFilter count={count} />
+        </Suspense>
+      </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto px-3 py-16">
         <Suspense
           fallback={
             <div className="py-24 flex items-center justify-center">
