@@ -75,10 +75,6 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  opacity: 0.7;
-}
-
 /* Selection */
 ::selection {
   background: var(--foreground);

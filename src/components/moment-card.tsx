@@ -10,17 +10,17 @@ export function MomentCard({ moment }: MomentCardProps) {
   const year = moment.publishedAt.getFullYear();
 
   return (
-    <Link href={`/m/${moment.slug}`} className="block break-inside-avoid mb-6">
-      <article className="relative">
+    <Link href={`/m/${moment.slug}`} className="block break-inside-avoid mb-3 group">
+      <article className="relative transition-opacity group-hover:opacity-95">
         {/* Image */}
         {moment.imageUrl && (
-          <div className="relative border border-border">
+          <div className="relative border border-border overflow-hidden">
             <Image
               src={moment.imageUrl}
               alt={moment.title}
               width={400}
               height={300}
-              className="w-full h-auto object-cover"
+              className="w-full h-auto object-cover transition-transform group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
@@ -28,8 +28,8 @@ export function MomentCard({ moment }: MomentCardProps) {
 
         {/* Museum caption */}
         <div className="mt-1.5 text-left">
-          <div className="font-body text-[9.6px] leading-[11.52px] text-foreground">
-            <div>{moment.title}, {year}</div>
+          <div className="font-body text-[11px] leading-[13.2px] text-foreground">
+            <div className="group-hover:italic">{moment.title}, {year}</div>
             {moment.creatorName && <div>{moment.creatorName}</div>}
             <div>{moment.category}</div>
           </div>
