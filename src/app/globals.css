@@ -39,6 +39,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), Georgia, serif;
   line-height: 1.6;
+  margin: 0;
+  padding: 0;
 }
 
 /* Display text: Inter ALL CAPS with tracking */

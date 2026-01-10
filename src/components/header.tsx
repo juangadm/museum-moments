@@ -93,13 +93,13 @@ export function Header() {
 
   return (
     <header className="bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-      <div className="px-3 py-3 flex items-center justify-between">
+      <div className="px-3 pt-3 pb-[3px] flex items-center justify-between">
           {/* Logo and tagline */}
           <div className="flex items-center gap-4">
-            <Link href="/" className="font-logo text-3xl uppercase">
+            <Link href="/" className="font-logo text-2xl uppercase tracking-tight">
               Museum Moments
             </Link>
-            <p className="text-[14px] text-foreground-muted font-body">
+            <p className="text-[12px] text-black font-body">
               an exhibition curated to stop the slop and build the beautiful
             </p>
           </div>

@@ -44,22 +44,23 @@ export function CategoryFilter({ count }: { count: number }) {
 
   return (
     <div className="px-3">
-      <ul className="flex gap-3 overflow-x-auto scrollbar-hide bg-black text-white py-[1.2px] px-[6px]">
+      <div className="inline-block">
+        <ul className="flex gap-3 overflow-x-auto scrollbar-hide pt-[3px] pb-3 px-[0.1px]">
           {CATEGORIES.map((category) => {
             const isActive = category === currentCategory;
             return (
               <li key={category}>
                 <button
                   onClick={() => handleCategoryClick(category)}
-                  className="relative font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] hover:underline"
+                  className="relative font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-black font-semibold py-[3px] hover:text-[#A0A0A0] underline-offset-4 cursor-pointer"
                 >
-                  <span className={isActive ? 'underline' : ''}>{category}</span>
+                  <span className={isActive ? 'underline underline-offset-4' : ''}>{category}</span>
                 </button>
               </li>
             );
           })}
           <li className="flex items-center">
-            <span className="relative inline-flex items-center font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] overflow-hidden">
+            <span className="relative inline-flex items-center font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-black font-semibold py-[3px] overflow-hidden">
               ( <span className="inline-block" style={{
                 transform: isAnimating ? 'translateY(-100%)' : 'translateY(0)',
                 opacity: isAnimating ? 0 : 1,
@@ -68,6 +69,7 @@ export function CategoryFilter({ count }: { count: number }) {
             </span>
           </li>
         </ul>
+      </div>
     </div>
   );
 }
