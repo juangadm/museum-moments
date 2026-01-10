@@ -7,12 +7,12 @@
   --font-logo: var(--font-gupter);
   --tracking-caps: 0.1em;
 
-  /* Colors - Dark mode only */
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --foreground-muted: #a3a3a3;
-  --border: #262626;
-  --border-strong: #404040;
+  /* Colors - Light mode only */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --foreground-muted: #666666;
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
 
   /* Rounding - designgeist inspired */
   --rounding-sm: 8px;
