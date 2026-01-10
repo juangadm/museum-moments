@@ -45,7 +45,7 @@ export function CategoryFilter() {
 
   return (
     <div className="w-full bg-black">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-1.5">
         <ul className="flex gap-3 overflow-x-auto scrollbar-hide" style={{ padding: "1.2px 0" }}>
           {CATEGORIES.map((category) => {
             const isActive = category === currentCategory;
