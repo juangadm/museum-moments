@@ -2,12 +2,12 @@
 
 :root {
   /* Typography */
-  --font-display: var(--font-inter);
+  --font-display: var(--font-azeret-mono);
   --font-body: var(--font-liter);
   --font-logo: var(--font-gupter);
   --tracking-caps: 0.1em;
 
-  /* Colors - Restrained palette (Light mode) */
+  /* Colors - Light mode only */
   --background: #ffffff;
   --foreground: #1a1a1a;
   --foreground-muted: #666666;
@@ -18,15 +18,6 @@
   --rounding-sm: 8px;
   --rounding-md: 12px;
   --rounding-lg: 16px;
-}
-
-/* Dark mode colors */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-  --foreground-muted: #a3a3a3;
-  --border: #262626;
-  --border-strong: #404040;
 }
 
 @theme inline {

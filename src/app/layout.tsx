@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, Lora, Gupter } from "next/font/google";
+import { Azeret_Mono, Lora, Gupter } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import "./globals.css";
 
-// Inter for display/UI text (ALL CAPS with tracking)
-const inter = Inter({
-  variable: "--font-inter",
+// Azeret Mono for headings/display text
+const azeretMono = Azeret_Mono({
+  variable: "--font-azeret-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -75,7 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${liter.variable} ${gupter.variable} antialiased`}>
+      <body className={`${azeretMono.variable} ${liter.variable} ${gupter.variable} antialiased`}>
         <div className="min-h-screen flex flex-col">
           <Header />
           <main className="flex-1">{children}</main>

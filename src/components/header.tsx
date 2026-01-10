@@ -22,50 +22,6 @@ function SearchIcon({ className }: { className?: string }) {
   );
 }
 
-function SunIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2" />
-      <path d="M12 20v2" />
-      <path d="m4.93 4.93 1.41 1.41" />
-      <path d="m17.66 17.66 1.41 1.41" />
-      <path d="M2 12h2" />
-      <path d="M20 12h2" />
-      <path d="m6.34 17.66-1.41 1.41" />
-      <path d="m19.07 4.93-1.41 1.41" />
-    </svg>
-  );
-}
-
-function MoonIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  );
-}
-
 function MenuIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -106,22 +62,11 @@ function XIcon({ className }: { className?: string }) {
 }
 
 export function Header() {
-  const [isDark, setIsDark] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    const shouldBeDark = stored === "dark" || (!stored && prefersDark);
-    setIsDark(shouldBeDark);
-    document.documentElement.classList.toggle("dark", shouldBeDark);
-  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -139,13 +84,6 @@ export function Header() {
     }
   }, [searchOpen]);
 
-  function toggleDarkMode() {
-    const newValue = !isDark;
-    setIsDark(newValue);
-    localStorage.setItem("theme", newValue ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", newValue);
-  }
-
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -154,7 +92,7 @@ export function Header() {
   }
 
   return (
-    <header className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+    <header className="bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* Logo and tagline */}
         <div className="flex items-center gap-4">
@@ -203,15 +141,6 @@ export function Header() {
               <SearchIcon />
             </button>
           )}
-
-          {/* Dark mode toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 text-foreground-muted hover:text-foreground transition-colors"
-            aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {isDark ? <SunIcon /> : <MoonIcon />}
-          </button>
 
           {/* Menu */}
           <div className="relative" ref={menuRef}>
