@@ -9,15 +9,14 @@ type Props = {
 
 export function RelatedMoments({ moments }: Props) {
   return (
-    <section className="border-t border-border bg-background">
+    <section className="bg-background">
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <h2 className="font-display text-xs text-foreground-muted mb-8">
+        <h2 className="font-display text-xs text-foreground font-semibold mb-8">
           Related Moments
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {moments.map((moment) => {
-            const overlayColor = moment.dominantColor || "#1a1a1a";
-            const textColor = getContrastColor(overlayColor);
+            const year = moment.publishedAt.getFullYear();
 
             return (
               <Link
@@ -25,46 +24,29 @@ export function RelatedMoments({ moments }: Props) {
                 href={`/m/${moment.slug}`}
                 className="group block"
               >
-                <article className="relative rounded-md overflow-hidden border border-border hover:border-border-strong transition-colors">
+                <article className="relative transition-opacity group-hover:opacity-95">
+                  {/* Image */}
                   {moment.imageUrl && (
-                    <div className="aspect-[4/3] relative overflow-hidden">
+                    <div className="relative border border-border overflow-hidden">
                       <Image
                         src={moment.imageUrl}
                         alt={moment.title}
-                        fill
-                        className="object-cover"
+                        width={400}
+                        height={300}
+                        className="w-full h-auto object-cover transition-transform group-hover:scale-105"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
-
-                      {/* Desktop only: Hover overlay with dominant color */}
-                      <div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden md:flex flex-col justify-start p-4"
-                        style={{ backgroundColor: `${overlayColor}cc` }}
-                      >
-                        <h3
-                          className="font-body text-base leading-snug"
-                          style={{ color: textColor }}
-                        >
-                          {moment.title}
-                        </h3>
-                        {moment.creatorName && (
-                          <p
-                            className="font-display text-[10px] mt-2"
-                            style={{ color: textColor, opacity: 0.9 }}
-                          >
-                            by {moment.creatorName}
-                          </p>
-                        )}
-                        <span
-                          className="font-display text-[10px] mt-1"
-                          style={{ color: textColor, opacity: 0.7 }}
-                        >
-                          {moment.category}
-                        </span>
-                      </div>
                     </div>
                   )}
-                  {/* Mobile: No metadata shown - just the image. Tap to see details. */}
+
+                  {/* Museum caption */}
+                  <div className="mt-1.5 text-left">
+                    <div className="font-body text-[11px] leading-[13.2px] text-foreground">
+                      <div className="group-hover:italic">{moment.title}, {year}</div>
+                      {moment.creatorName && <div>{moment.creatorName}</div>}
+                      <div>{moment.category}</div>
+                    </div>
+                  </div>
                 </article>
               </Link>
             );

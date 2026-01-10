@@ -20,7 +20,8 @@ export function ShareButton({ title }: Props) {
     <button
       type="button"
       onClick={handleShare}
-      className="font-display text-xs px-4 py-3 border border-border text-foreground-muted hover:border-foreground hover:text-foreground transition-colors"
+      className="font-display text-xs px-3 py-2 border border-foreground text-foreground hover:bg-[#a0a0a0] hover:border-[#a0a0a0] transition-colors"
+      style={{ borderRadius: '0' }}
     >
       Share
     </button>
