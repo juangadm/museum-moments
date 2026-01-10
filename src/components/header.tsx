@@ -92,7 +92,7 @@ export function Header() {
   }
 
   return (
-    <header className="border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+    <header className="bg-background/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* Logo and tagline */}
         <div className="flex items-center gap-4">
