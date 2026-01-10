@@ -4,27 +4,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 const CATEGORIES = [
   "All",
-  "Illustration",
-  "Web Design",
-  "Photography",
-  "Article",
-  "Graphic Design",
-  "Poster",
-  "Product Design",
-  "Typography",
-  "Art",
-  "3D",
   "Branding",
-  "Interior Design",
-  "Architecture",
-  "Advertising",
-  "Automotive",
-  "Portfolio",
-  "Animation",
-  "Events",
-  "Installation",
-  "Comics",
-  "Books",
+  "Images",
+  "Interfaces",
+  "Objects",
+  "Spaces",
+  "Typography",
 ];
 
 export function CategoryFilter() {
