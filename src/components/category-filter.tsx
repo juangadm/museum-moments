@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const CATEGORIES = [
   "All",
@@ -12,10 +13,23 @@ const CATEGORIES = [
   "Typography",
 ];
 
-export function CategoryFilter() {
+export function CategoryFilter({ count }: { count: number }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category") || "All";
+  const [displayCount, setDisplayCount] = useState(count);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (count !== displayCount) {
+      setIsAnimating(true);
+      const timeout = setTimeout(() => {
+        setDisplayCount(count);
+        setIsAnimating(false);
+      }, 150);
+      return () => clearTimeout(timeout);
+    }
+  }, [count, displayCount]);
 
   function handleCategoryClick(category: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -45,6 +59,15 @@ export function CategoryFilter() {
               </li>
             );
           })}
+          <li className="flex items-center">
+            <span className="relative inline-flex items-center font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-foreground py-[3px] overflow-hidden">
+              ( <span className="inline-block" style={{
+                transform: isAnimating ? 'translateY(-100%)' : 'translateY(0)',
+                opacity: isAnimating ? 0 : 1,
+                transition: 'transform 150ms ease-out, opacity 150ms ease-out'
+              }}>{displayCount}</span> )
+            </span>
+          </li>
         </ul>
       </div>
     </div>

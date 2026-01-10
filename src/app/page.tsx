@@ -46,10 +46,14 @@ export default async function Home(props: { searchParams: SearchParams }) {
   const search =
     typeof searchParams.q === "string" ? searchParams.q : undefined;
 
+  // Get count for the active category
+  const moments = await getMoments({ category, search });
+  const count = moments.length;
+
   return (
     <>
       <Suspense fallback={null}>
-        <CategoryFilter />
+        <CategoryFilter count={count} />
       </Suspense>
 
       <div className="max-w-7xl mx-auto px-6 py-16">
