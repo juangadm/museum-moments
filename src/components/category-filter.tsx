@@ -44,7 +44,7 @@ export function CategoryFilter() {
   }
 
   return (
-    <div className="bg-black">
+    <div className="w-full bg-black">
       <div className="max-w-7xl mx-auto px-6">
         <ul className="flex gap-3 overflow-x-auto scrollbar-hide" style={{ padding: "1.2px 0" }}>
           {CATEGORIES.map((category) => {
@@ -53,8 +53,7 @@ export function CategoryFilter() {
               <li key={category} className="flex items-stretch">
                 <button
                   onClick={() => handleCategoryClick(category)}
-                  className="flex-shrink-0 font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] my-[1.5px]"
-                  style={{ opacity: isActive ? 1 : 0.7 }}
+                  className={`flex-shrink-0 font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] my-[1.5px] ${isActive ? 'underline' : ''}`}
                 >
                   {category}
                 </button>
