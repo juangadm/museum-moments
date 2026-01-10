@@ -30,18 +30,17 @@ export function CategoryFilter() {
 
   return (
     <div className="px-6">
-      <div className="max-w-7xl mx-auto bg-black" style={{ padding: "1.2px 6px" }}>
-        <ul className="flex gap-3 overflow-x-auto scrollbar-hide">
+      <div className="max-w-7xl mx-auto">
+        <ul className="flex gap-3 overflow-x-auto scrollbar-hide py-[1.2px]">
           {CATEGORIES.map((category) => {
             const isActive = category === currentCategory;
             return (
-              <li key={category} className="flex items-stretch">
+              <li key={category}>
                 <button
                   onClick={() => handleCategoryClick(category)}
-                  className="relative flex-shrink-0 font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] my-[1.5px] hover:underline"
+                  className="relative font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-foreground py-[3px] hover:underline"
                 >
-                  <span className="invisible font-bold absolute" aria-hidden="true">{category}</span>
-                  <span className={`relative ${isActive ? 'font-bold underline' : ''}`}>{category}</span>
+                  <span className={isActive ? 'underline' : ''}>{category}</span>
                 </button>
               </li>
             );
