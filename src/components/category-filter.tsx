@@ -53,9 +53,10 @@ export function CategoryFilter() {
               <li key={category} className="flex items-stretch">
                 <button
                   onClick={() => handleCategoryClick(category)}
-                  className={`flex-shrink-0 font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] my-[1.5px] hover:font-bold hover:underline ${isActive ? 'font-bold underline' : ''}`}
+                  className={`relative flex-shrink-0 font-display text-[11px] uppercase tracking-[0.1px] whitespace-nowrap text-white py-[3px] my-[1.5px] hover:font-bold hover:underline ${isActive ? 'font-bold underline' : ''}`}
                 >
-                  {category}
+                  <span className="invisible font-bold absolute">{category}</span>
+                  <span className="relative">{category}</span>
                 </button>
               </li>
             );
