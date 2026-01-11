@@ -16,10 +16,13 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
+// Generate pages on-demand (ISR) to avoid build-time database dependency
+// Pages will be generated on first request and cached
 export async function generateStaticParams() {
-  const moments = await getMoments();
-  return moments.map((m) => ({ slug: m.slug }));
+  return [];
 }
+
+export const dynamicParams = true; // Enable fallback for on-demand generation
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Moment } from "@/lib/moments";
-import { getContrastColor } from "@/lib/color-extractor";
 
 type Props = {
   moments: Moment[];
