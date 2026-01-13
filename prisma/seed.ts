@@ -7,7 +7,7 @@ const moments = [
   {
     slug: "linear-2024-release-page",
     title: "Linear 2024 Release Page",
-    category: "Web Design",
+    category: "Interfaces",
     creatorName: "Linear",
     creatorUrl: "https://linear.app",
     sourceUrl: "https://linear.app/releases/2024-01",
@@ -31,7 +31,7 @@ const moments = [
   {
     slug: "teenage-engineering-op-1",
     title: "Teenage Engineering OP-1 Field",
-    category: "Product / UI",
+    category: "Objects",
     creatorName: "Teenage Engineering",
     creatorUrl: "https://teenage.engineering",
     sourceUrl: "https://teenage.engineering/products/op-1-field",
@@ -43,7 +43,7 @@ const moments = [
   {
     slug: "monocle-magazine-covers",
     title: "Monocle Magazine Covers",
-    category: "Posters",
+    category: "Images",
     creatorName: "Monocle",
     creatorUrl: "https://monocle.com",
     sourceUrl: "https://monocle.com/magazine/",
@@ -55,7 +55,7 @@ const moments = [
   {
     slug: "muji-product-photography",
     title: "MUJI Product Photography",
-    category: "Photography",
+    category: "Images",
     creatorName: "MUJI",
     creatorUrl: "https://muji.com",
     sourceUrl: "https://www.muji.com/us/",
@@ -79,7 +79,7 @@ const moments = [
   {
     slug: "arc-browser-spaces",
     title: "Arc Browser Spaces",
-    category: "Product / UI",
+    category: "Interfaces",
     creatorName: "The Browser Company",
     creatorUrl: "https://arc.net",
     sourceUrl: "https://arc.net",
@@ -91,7 +91,7 @@ const moments = [
   {
     slug: "notion-empty-states",
     title: "Notion's Empty States",
-    category: "Illustration",
+    category: "Images",
     creatorName: "Notion",
     creatorUrl: "https://notion.so",
     sourceUrl: "https://notion.so",
@@ -115,7 +115,7 @@ const moments = [
   {
     slug: "vercel-ship-conference",
     title: "Vercel Ship 2024",
-    category: "Events",
+    category: "Spaces",
     creatorName: "Vercel",
     creatorUrl: "https://vercel.com",
     sourceUrl: "https://vercel.com/ship",
@@ -127,7 +127,7 @@ const moments = [
   {
     slug: "dieter-rams-ten-principles",
     title: "Dieter Rams: Ten Principles",
-    category: "Misc",
+    category: "Objects",
     creatorName: "Dieter Rams",
     creatorUrl: null,
     sourceUrl: "https://www.vitsoe.com/us/about/good-design",

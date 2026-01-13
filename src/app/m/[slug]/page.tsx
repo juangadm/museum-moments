@@ -72,27 +72,24 @@ export default async function MomentPage({ params }: Props) {
           <div className="text-sm whitespace-nowrap flex-shrink-0">
             <Link
               href={`/?category=${encodeURIComponent(moment.category)}`}
-              className="hover:underline"
+              className="text-neutral-500 hover:text-black transition-colors"
             >
               {moment.category}
             </Link>
             {moment.creatorName && (
               <>
-                <span> • </span>
+                <span className="text-neutral-500"> • </span>
                 {moment.creatorUrl ? (
                   <a
                     href={moment.creatorUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline"
+                    className="text-neutral-500 hover:text-black transition-colors"
                   >
-                    {moment.creatorName}
-                    <svg className="w-3 h-3 inline ml-1 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                    {moment.creatorName} ↗
                   </a>
                 ) : (
-                  <span>{moment.creatorName}</span>
+                  <span className="text-neutral-500">{moment.creatorName}</span>
                 )}
               </>
             )}

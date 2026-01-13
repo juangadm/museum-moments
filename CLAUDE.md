@@ -63,7 +63,7 @@ prisma/
 **Data Model (Moment)**
 The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 - `slug` - URL-friendly identifier (unique)
-- `category` - One of: Branding, Images, Interfaces, Objects, Spaces, Typography, Events, Illustration, Photography, Posters, Product/UI, Web Design, Misc
+- `category` - One of: Branding, Images, Interfaces, Objects, Spaces, Typography
 - `tags` - JSON array stored as string (parsed in `src/lib/moments.ts`)
 - `dominantColor` - Hex color extracted from image (used for hover overlays)
 - `imageUrl` - Optional image (Unsplash or other remote URLs)
@@ -103,6 +103,12 @@ The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 
 ### Adding a New Moment
 
+**Via Admin UI (Recommended):**
+1. Go to `/admin` and enter your password
+2. Fill in the form and upload an image
+3. Click Save - moment appears immediately
+
+**Via Seed Script (for bulk import):**
 1. Add entry to `prisma/seed.ts` moments array
 2. Run `npm run db:seed` to upsert the new moment
 3. The seed script will automatically extract the dominant color if `imageUrl` is provided
@@ -121,3 +127,57 @@ When adding moments, use these standardized categories. Adding new categories re
 ### React Compiler
 
 This project has React Compiler enabled (`reactCompiler: true` in `next.config.ts`). Be mindful of compiler rules when writing components.
+
+---
+
+## Adding Content (For Curator)
+
+### How to Access Admin
+Navigate directly to: `https://museum-moments.com/admin` (or `localhost:3001/admin` locally)
+
+There are no links to this page on the public site - it's a secret URL only you know.
+
+### Adding a New Moment
+1. Go to `/admin` and enter your password
+2. Fill in the form:
+   - **Title** (required): Name of the piece
+   - **Category** (required): Pick from Branding, Images, Interfaces, Objects, Spaces, Typography
+   - **Creator**: Who made it (optional)
+   - **Source URL**: Link to the work (optional)
+   - **Image** (required): Upload a screenshot
+   - **Description** (required): 2-4 sentences explaining why this is good
+   - **Tags**: Click suggestions or add your own
+3. Click Save
+4. Moment appears on the site immediately
+
+### Screenshot Guidelines
+
+**Taking Screenshots (Mac):**
+- `Cmd + Shift + 4` → select area
+- `Cmd + Shift + 4 + Space` → capture window (cleaner)
+- Center on the interesting part - the grid crops to 3:4
+
+**Ideal dimensions:** ~1200x1600px (3:4 portrait)
+On Retina: select ~600x800 points = 1200x1600 actual
+
+**Tips:**
+- Capture wider than needed, grid auto-crops to center
+- Avoid browser chrome when possible
+- Focus on the most visually striking element
+
+**If site lacks a good hero image:**
+- Screenshot a specific detail
+- Capture the product itself
+- Use their homepage hero section
+
+### Category Definitions
+- **Branding** - logos, identity systems, brand guidelines
+- **Images** - photography, illustration, posters, visual art
+- **Interfaces** - web design, apps, product UI, dashboards
+- **Objects** - physical products, hardware, packaging
+- **Spaces** - architecture, interiors, retail environments
+- **Typography** - typefaces, lettering, type systems
+
+### Image Hosting
+Images are uploaded to Vercel Blob automatically when you use the admin form.
+Storage limit: 1GB on free tier.
