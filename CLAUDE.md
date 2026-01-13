@@ -38,24 +38,28 @@ Museum Moments is a curated archive of design inspiration. It's a Next.js 16 app
 ### Project Structure
 ```
 src/
-├── app/                    # Next.js App Router pages
-│   ├── page.tsx           # Home page with masonry grid
-│   ├── m/[slug]/page.tsx  # Individual moment detail pages
-│   ├── layout.tsx         # Root layout with fonts & metadata
-│   └── [about|terms|privacy|submit]/ # Static pages
-├── components/            # React components
-│   ├── moment-card.tsx   # Card component for masonry grid
-│   ├── category-filter.tsx # Client component for filtering
+├── app/
+│   ├── page.tsx              # Home page with masonry grid
+│   ├── m/[slug]/page.tsx     # Individual moment detail pages
+│   ├── admin/page.tsx        # Password-protected admin for adding moments
+│   ├── about/page.tsx        # About page with Substack CTA
+│   ├── api/
+│   │   ├── upload/route.ts   # Vercel Blob image upload
+│   │   └── moments/route.ts  # Create moment API
+│   └── layout.tsx            # Root layout with fonts & metadata
+├── components/
+│   ├── moment-card.tsx       # Card component for masonry grid
+│   ├── category-filter.tsx   # Client component for filtering
 │   ├── moment-navigation.tsx # Prev/Next navigation
-│   └── related-moments.tsx # Shows related moments by tags
+│   └── related-moments.tsx   # Shows related moments by tags
 └── lib/
-    ├── db.ts             # Prisma client singleton
-    ├── moments.ts        # Data access layer for Moment model
-    └── color-extractor.ts # Extract dominant colors from images
+    ├── db.ts                 # Prisma client singleton
+    ├── moments.ts            # Data access layer for Moment model
+    └── color-extractor.ts    # Extract dominant colors from images
 
 prisma/
-├── schema.prisma         # Database schema (single Moment model)
-└── seed.ts              # Database seeding script
+├── schema.prisma             # Database schema (single Moment model)
+└── seed.ts                   # Database seeding script
 ```
 
 ### Key Concepts
@@ -98,7 +102,8 @@ The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 - Logo: `.font-logo` → Gupter Bold
 
 **Image Handling**
-- Next.js Image component with remote patterns configured for `images.unsplash.com`
+- Next.js Image component with remote patterns for `images.unsplash.com` and `*.public.blob.vercel-storage.com`
+- Admin uploads go to Vercel Blob (1GB free tier)
 - Images are optional (moments can be text-only)
 
 ### Adding a New Moment
@@ -181,3 +186,29 @@ On Retina: select ~600x800 points = 1200x1600 actual
 ### Image Hosting
 Images are uploaded to Vercel Blob automatically when you use the admin form.
 Storage limit: 1GB on free tier.
+
+---
+
+## Environment Variables
+
+### Required Variables
+| Variable | Purpose | Where to set |
+|----------|---------|--------------|
+| `DATABASE_URL` | PostgreSQL connection (Neon) | `.env.local`, Vercel |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob uploads | `.env.local`, Vercel |
+| `ADMIN_PASSWORD` | Admin page authentication | `.env.local`, Vercel |
+
+### Gotchas
+- **Avoid `$` in env values**: Both Next.js and Vercel expand `$` as variable syntax. Use `!` or other characters instead.
+- **Local escaping**: If you must use `$` locally, escape with backslash: `ADMIN_PASSWORD=pass\$word`
+- **Vercel**: Set env vars before deploying. If added after, redeploy to pick them up.
+
+---
+
+## Design Principles
+
+This project prioritizes:
+- **Simplicity**: Minimal dependencies, straightforward patterns
+- **Editorial restraint**: Museum-catalog aesthetic, no visual clutter
+- **Performance**: Static generation where possible, optimized images
+- **Maintainability**: Clear file structure, consistent naming
