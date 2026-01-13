@@ -100,7 +100,14 @@ export function Header() {
               Museum Moments
             </Link>
             <p className="text-[12px] text-black font-body">
-              an exhibition curated to stop the slop and build the beautiful
+              an exhibition{" "}
+              <button
+                onClick={() => window.open("https://juangabriel.xyz", "_blank")}
+                className="text-black hover:text-[#A0A0A0] transition-colors cursor-pointer"
+              >
+                <span className="underline decoration-1 underline-offset-4">curated</span>
+              </button>{" "}
+              to stop the slop and build the beautiful
             </p>
           </div>
 
@@ -183,7 +190,7 @@ export function Header() {
                   <p className="text-[10px] text-foreground-muted font-body">
                     by{" "}
                     <a
-                      href="https://twitter.com/juangadm_"
+                      href="https://juangabriel.xyz"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:text-foreground transition-colors"

@@ -31,7 +31,7 @@ export function Footer() {
           Submit
         </a>
         <a
-          href="https://twitter.com/YOUR_TWITTER_HANDLE"
+          href="https://x.com/juangadm_"
           target="_blank"
           rel="noopener noreferrer"
           className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
@@ -39,7 +39,7 @@ export function Footer() {
           Twitter
         </a>
         <a
-          href="https://www.threads.net/@YOUR_THREADS_HANDLE"
+          href="https://www.threads.com/@juangadm"
           target="_blank"
           rel="noopener noreferrer"
           className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
@@ -47,7 +47,7 @@ export function Footer() {
           Threads
         </a>
         <a
-          href="https://YOUR_SUBDOMAIN.substack.com/"
+          href="https://delightinthedetails.substack.com"
           target="_blank"
           rel="noopener noreferrer"
           className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
@@ -55,7 +55,7 @@ export function Footer() {
           Substack
         </a>
         <a
-          href="https://www.linkedin.com/in/YOUR_LINKEDIN_HANDLE"
+          href="https://www.linkedin.com/in/juangadm/"
           target="_blank"
           rel="noopener noreferrer"
           className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
