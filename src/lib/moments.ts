@@ -1,5 +1,27 @@
 import { db } from "./db";
 
+// Custom error class for data layer errors
+export class DataError extends Error {
+  constructor(message: string, public readonly cause?: unknown) {
+    super(message);
+    this.name = "DataError";
+  }
+}
+
+// Safe JSON parse with fallback
+function safeParseTagsArray(tags: string): string[] {
+  try {
+    const parsed = JSON.parse(tags);
+    if (Array.isArray(parsed)) {
+      return parsed.filter((t): t is string => typeof t === "string");
+    }
+    return [];
+  } catch {
+    console.error("Failed to parse tags JSON:", tags);
+    return [];
+  }
+}
+
 export type Moment = {
   id: string;
   slug: string;
@@ -48,7 +70,7 @@ function parseMoment(m: {
     sourceUrl: m.sourceUrl,
     imageUrl: m.imageUrl,
     description: m.description,
-    tags: JSON.parse(m.tags) as string[],
+    tags: safeParseTagsArray(m.tags),
     publishedAt: m.publishedAt,
     dominantColor: m.dominantColor,
   };
@@ -58,60 +80,72 @@ export async function getMoments(options?: {
   category?: string;
   search?: string;
 }): Promise<Moment[]> {
-  const where: { category?: string; OR?: Array<{ title?: { contains: string }; description?: { contains: string } }> } = {};
+  try {
+    const where: { category?: string } = {};
 
-  if (options?.category && options.category !== "All") {
-    where.category = options.category;
+    if (options?.category && options.category !== "All") {
+      where.category = options.category;
+    }
+
+    const moments = await db.moment.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+    });
+
+    let parsed = moments.map(parseMoment);
+
+    // Client-side search for flexibility
+    if (options?.search) {
+      const searchLower = options.search.toLowerCase();
+      parsed = parsed.filter(
+        (m: Moment) =>
+          m.title.toLowerCase().includes(searchLower) ||
+          m.description.toLowerCase().includes(searchLower) ||
+          m.tags.some((t: string) => t.toLowerCase().includes(searchLower))
+      );
+    }
+
+    return parsed;
+  } catch (error) {
+    throw new DataError("Failed to fetch moments", error);
   }
-
-  const moments = await db.moment.findMany({
-    where,
-    orderBy: { publishedAt: "desc" },
-  });
-
-  let parsed = moments.map(parseMoment);
-
-  // Client-side search since SQLite doesn't support case-insensitive contains well
-  if (options?.search) {
-    const searchLower = options.search.toLowerCase();
-    parsed = parsed.filter(
-      (m: Moment) =>
-        m.title.toLowerCase().includes(searchLower) ||
-        m.description.toLowerCase().includes(searchLower) ||
-        m.tags.some((t: string) => t.toLowerCase().includes(searchLower))
-    );
-  }
-
-  return parsed;
 }
 
 export async function getMomentBySlug(slug: string): Promise<Moment | null> {
-  const moment = await db.moment.findUnique({
-    where: { slug },
-  });
+  try {
+    const moment = await db.moment.findUnique({
+      where: { slug },
+    });
 
-  if (!moment) return null;
+    if (!moment) return null;
 
-  return parseMoment(moment);
+    return parseMoment(moment);
+  } catch (error) {
+    throw new DataError(`Failed to fetch moment: ${slug}`, error);
+  }
 }
 
 export async function getAdjacentMoments(
   publishedAt: Date
 ): Promise<{ prev: MomentNav; next: MomentNav }> {
-  const [prev, next] = await Promise.all([
-    db.moment.findFirst({
-      where: { publishedAt: { gt: publishedAt } },
-      orderBy: { publishedAt: "asc" },
-      select: { slug: true, title: true },
-    }),
-    db.moment.findFirst({
-      where: { publishedAt: { lt: publishedAt } },
-      orderBy: { publishedAt: "desc" },
-      select: { slug: true, title: true },
-    }),
-  ]);
+  try {
+    const [prev, next] = await Promise.all([
+      db.moment.findFirst({
+        where: { publishedAt: { gt: publishedAt } },
+        orderBy: { publishedAt: "asc" },
+        select: { slug: true, title: true },
+      }),
+      db.moment.findFirst({
+        where: { publishedAt: { lt: publishedAt } },
+        orderBy: { publishedAt: "desc" },
+        select: { slug: true, title: true },
+      }),
+    ]);
 
-  return { prev, next };
+    return { prev, next };
+  } catch (error) {
+    throw new DataError("Failed to fetch adjacent moments", error);
+  }
 }
 
 export async function getRelatedMoments(
@@ -120,28 +154,47 @@ export async function getRelatedMoments(
   category: string,
   limit: number = 3
 ): Promise<Moment[]> {
-  // First try to find moments with shared tags
-  const allMoments = await db.moment.findMany({
-    where: {
-      id: { not: currentId },
-    },
-    orderBy: { publishedAt: "desc" },
-  });
+  try {
+    // First try same category (more likely to be related)
+    const sameCategoryMoments = await db.moment.findMany({
+      where: {
+        id: { not: currentId },
+        category,
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 50, // Cap for performance
+    });
 
-  const parsed = allMoments.map(parseMoment);
+    // If not enough in same category, get others
+    const otherMoments = sameCategoryMoments.length < limit
+      ? await db.moment.findMany({
+          where: {
+            id: { not: currentId },
+            category: { not: category },
+          },
+          orderBy: { publishedAt: "desc" },
+          take: 20,
+        })
+      : [];
 
-  // Score by shared tags
-  const scored = parsed.map((m: Moment) => {
-    const sharedTags = m.tags.filter((t: string) => tags.includes(t)).length;
-    const sameCategory = m.category === category ? 1 : 0;
-    return { moment: m, score: sharedTags * 2 + sameCategory };
-  });
+    const allMoments = [...sameCategoryMoments, ...otherMoments];
+    const parsed = allMoments.map(parseMoment);
 
-  // Sort by score, then by date
-  scored.sort((a: { moment: Moment; score: number }, b: { moment: Moment; score: number }) => {
-    if (b.score !== a.score) return b.score - a.score;
-    return b.moment.publishedAt.getTime() - a.moment.publishedAt.getTime();
-  });
+    // Score by shared tags
+    const scored = parsed.map((m: Moment) => {
+      const sharedTags = m.tags.filter((t: string) => tags.includes(t)).length;
+      const sameCategory = m.category === category ? 1 : 0;
+      return { moment: m, score: sharedTags * 2 + sameCategory };
+    });
 
-  return scored.slice(0, limit).map((s: { moment: Moment; score: number }) => s.moment);
+    // Sort by score, then by date
+    scored.sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return b.moment.publishedAt.getTime() - a.moment.publishedAt.getTime();
+    });
+
+    return scored.slice(0, limit).map((s) => s.moment);
+  } catch (error) {
+    throw new DataError("Failed to fetch related moments", error);
+  }
 }

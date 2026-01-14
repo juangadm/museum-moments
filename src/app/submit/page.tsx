@@ -17,7 +17,7 @@ export default function SubmitPage() {
           </p>
           <p className="text-foreground-muted">
             All submissions are reviewed by hand. Not everything will be
-            accepted — that's the point.
+            accepted — that&apos;s the point.
           </p>
           <div className="pt-4">
             <a

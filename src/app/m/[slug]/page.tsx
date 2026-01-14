@@ -6,7 +6,6 @@ import {
   getMomentBySlug,
   getAdjacentMoments,
   getRelatedMoments,
-  getMoments,
 } from "@/lib/moments";
 import { MomentNavigation } from "@/components/moment-navigation";
 import { RelatedMoments } from "@/components/related-moments";
