@@ -22,12 +22,16 @@ export function CategoryFilter({ count }: { count: number }) {
 
   useEffect(() => {
     if (count !== displayCount) {
-      setIsAnimating(true);
-      const timeout = setTimeout(() => {
+      // Use setTimeout to avoid synchronous setState in effect
+      const animateTimeout = setTimeout(() => setIsAnimating(true), 0);
+      const updateTimeout = setTimeout(() => {
         setDisplayCount(count);
         setIsAnimating(false);
       }, 150);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(animateTimeout);
+        clearTimeout(updateTimeout);
+      };
     }
   }, [count, displayCount]);
 
