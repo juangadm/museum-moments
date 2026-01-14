@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const CATEGORIES = [
   "All",
@@ -17,23 +16,6 @@ export function CategoryFilter({ count }: { count: number }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category") || "All";
-  const [displayCount, setDisplayCount] = useState(count);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  useEffect(() => {
-    if (count !== displayCount) {
-      // Use setTimeout to avoid synchronous setState in effect
-      const animateTimeout = setTimeout(() => setIsAnimating(true), 0);
-      const updateTimeout = setTimeout(() => {
-        setDisplayCount(count);
-        setIsAnimating(false);
-      }, 150);
-      return () => {
-        clearTimeout(animateTimeout);
-        clearTimeout(updateTimeout);
-      };
-    }
-  }, [count, displayCount]);
 
   function handleCategoryClick(category: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -64,12 +46,8 @@ export function CategoryFilter({ count }: { count: number }) {
             );
           })}
           <li className="flex items-center">
-            <span className="relative inline-flex items-center font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-black font-semibold py-[3px] overflow-hidden">
-              ( <span className="inline-block" style={{
-                transform: isAnimating ? 'translateY(-100%)' : 'translateY(0)',
-                opacity: isAnimating ? 0 : 1,
-                transition: 'transform 150ms ease-out, opacity 150ms ease-out'
-              }}>{displayCount}</span> )
+            <span className="font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-black font-semibold py-[3px]">
+              ( {count} )
             </span>
           </li>
         </ul>
