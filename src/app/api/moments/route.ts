@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     const imageUrl = data.imageUrl as string;
     const creatorName = (data.creatorName as string) || null;
     const creatorUrl = (data.creatorUrl as string) || null;
-    const sourceUrl = (data.sourceUrl as string) || null;
+    const sourceUrl = (data.sourceUrl as string) || "";
 
     // Generate slug from title if not provided
     const slug = (data.slug as string) || title
