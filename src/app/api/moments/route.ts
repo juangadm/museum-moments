@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { extractDominantColor } from "@/lib/color-extractor";
+import { validateMomentInput } from "@/lib/validation";
 
 export async function POST(request: Request) {
   try {
@@ -8,22 +9,39 @@ export async function POST(request: Request) {
     const password = request.headers.get("x-admin-password");
     const envPassword = process.env.ADMIN_PASSWORD;
 
+    if (!envPassword) {
+      console.error("ADMIN_PASSWORD not configured");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
     if (password !== envPassword) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const data = await request.json();
-
-    // Validate required fields
-    if (!data.title || !data.category || !data.description || !data.imageUrl) {
-      return NextResponse.json(
-        { error: "Missing required fields: title, category, description, imageUrl" },
-        { status: 400 }
-      );
+    let data: Record<string, unknown>;
+    try {
+      data = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
     }
 
+    // Validate input
+    const validation = validateMomentInput(data);
+    if (!validation.valid) {
+      return NextResponse.json({ error: validation.error }, { status: 400 });
+    }
+
+    // Type assertions are safe after validation
+    const title = data.title as string;
+    const category = data.category as string;
+    const description = data.description as string;
+    const imageUrl = data.imageUrl as string;
+    const creatorName = (data.creatorName as string) || null;
+    const creatorUrl = (data.creatorUrl as string) || null;
+    const sourceUrl = (data.sourceUrl as string) || null;
+
     // Generate slug from title if not provided
-    const slug = data.slug || data.title
+    const slug = (data.slug as string) || title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-")
@@ -41,33 +59,31 @@ export async function POST(request: Request) {
 
     // Extract dominant color from image
     let dominantColor: string | null = null;
-    if (data.imageUrl) {
-      try {
-        dominantColor = await extractDominantColor(data.imageUrl);
-      } catch (e) {
-        console.error("Failed to extract color:", e);
-        dominantColor = "#1a1a1a"; // fallback
-      }
+    try {
+      dominantColor = await extractDominantColor(imageUrl);
+    } catch (e) {
+      console.error("Failed to extract color:", e);
+      dominantColor = "#1a1a1a"; // fallback
     }
 
     // Parse tags - accept array or comma-separated string
     let tags: string[] = [];
     if (Array.isArray(data.tags)) {
-      tags = data.tags;
+      tags = data.tags.filter((t): t is string => typeof t === "string");
     } else if (typeof data.tags === "string") {
-      tags = data.tags.split(",").map((t: string) => t.trim()).filter(Boolean);
+      tags = data.tags.split(",").map((t) => t.trim()).filter(Boolean);
     }
 
     const moment = await db.moment.create({
       data: {
         slug,
-        title: data.title,
-        category: data.category,
-        creatorName: data.creatorName || null,
-        creatorUrl: data.creatorUrl || null,
-        sourceUrl: data.sourceUrl || null,
-        imageUrl: data.imageUrl,
-        description: data.description,
+        title,
+        category,
+        creatorName,
+        creatorUrl,
+        sourceUrl,
+        imageUrl,
+        description,
         tags: JSON.stringify(tags),
         dominantColor,
       },
