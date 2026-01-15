@@ -12,7 +12,9 @@
     "postinstall": "DATABASE_URL=${DATABASE_URL:-postgresql://user:pass@localhost:5432/db} prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:clear": "tsx scripts/clear-moments.ts",
+    "db:import": "tsx scripts/bulk-import.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.1",
