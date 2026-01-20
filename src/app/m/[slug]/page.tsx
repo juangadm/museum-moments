@@ -10,6 +10,7 @@ import {
 import { MomentNavigation } from "@/components/moment-navigation";
 import { RelatedMoments } from "@/components/related-moments";
 import { ShareButton } from "@/components/share-button";
+import { MomentEditWrapper } from "@/components/admin/moment-edit-wrapper";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -56,7 +57,7 @@ export default async function MomentPage({ params }: Props) {
   ]);
 
   return (
-    <>
+    <MomentEditWrapper moment={moment}>
       <MomentNavigation prev={prev} next={next} />
 
       <article className="max-w-4xl mx-auto px-6 py-16">
@@ -218,6 +219,6 @@ export default async function MomentPage({ params }: Props) {
 
       {/* Related moments */}
       {related.length > 0 && <RelatedMoments moments={related} />}
-    </>
+    </MomentEditWrapper>
   );
 }

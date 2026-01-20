@@ -262,7 +262,12 @@ export default function AdminPage() {
             <Link href="/" className="font-logo text-xl uppercase tracking-tight">
               Museum Moments
             </Link>
-            <span className="font-display text-[11px] text-foreground-muted">/ ADMIN</span>
+            <span className="font-display text-[11px] text-foreground-muted">/ ADMIN /</span>
+            <span className="font-display text-[11px] font-medium">ADD</span>
+            <span className="font-display text-[11px] text-foreground-muted">/</span>
+            <Link href="/admin/submissions" className="font-display text-[11px] text-foreground-muted hover:text-foreground">
+              SUBMISSIONS
+            </Link>
           </div>
           <button
             onClick={handleLogout}

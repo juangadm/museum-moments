@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { extractDominantColor } from "./color-extractor";
 
 // Custom error class for data layer errors
 export class DataError extends Error {
@@ -196,5 +197,60 @@ export async function getRelatedMoments(
     return scored.slice(0, limit).map((s) => s.moment);
   } catch (error) {
     throw new DataError("Failed to fetch related moments", error);
+  }
+}
+
+// Type for moment updates (all fields optional except slug is excluded)
+export type MomentUpdate = {
+  title?: string;
+  category?: string;
+  creatorName?: string | null;
+  creatorUrl?: string | null;
+  sourceUrl?: string;
+  imageUrl?: string;
+  description?: string;
+  tags?: string[];
+};
+
+export async function updateMoment(
+  slug: string,
+  data: MomentUpdate
+): Promise<Moment> {
+  try {
+    // Check if moment exists
+    const existing = await db.moment.findUnique({
+      where: { slug },
+    });
+
+    if (!existing) {
+      throw new DataError(`Moment not found: ${slug}`);
+    }
+
+    // Build update data
+    const updateData: Record<string, unknown> = {};
+
+    if (data.title !== undefined) updateData.title = data.title;
+    if (data.category !== undefined) updateData.category = data.category;
+    if (data.creatorName !== undefined) updateData.creatorName = data.creatorName;
+    if (data.creatorUrl !== undefined) updateData.creatorUrl = data.creatorUrl;
+    if (data.sourceUrl !== undefined) updateData.sourceUrl = data.sourceUrl;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags);
+
+    // If imageUrl changed, re-extract dominant color
+    if (data.imageUrl !== undefined && data.imageUrl !== existing.imageUrl) {
+      updateData.imageUrl = data.imageUrl;
+      updateData.dominantColor = await extractDominantColor(data.imageUrl);
+    }
+
+    const updated = await db.moment.update({
+      where: { slug },
+      data: updateData,
+    });
+
+    return parseMoment(updated);
+  } catch (error) {
+    if (error instanceof DataError) throw error;
+    throw new DataError(`Failed to update moment: ${slug}`, error);
   }
 }

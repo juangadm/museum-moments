@@ -29,6 +29,49 @@ model Moment {
   // Extracted from image for hover overlay
   dominantColor String?
 
+  // Link back to submission if created from one
+  submission Submission?
+
   @@index([category])
   @@index([publishedAt])
+}
+
+model Submission {
+  id            String   @id @default(cuid())
+
+  // Visitor-provided (required)
+  imageUrl      String
+  sourceUrl     String
+  creatorName   String
+
+  // Visitor-provided (optional)
+  creatorUrl    String?
+  title         String?
+  description   String?
+  submitterNote String?
+
+  // Anti-spam metadata
+  submitterIp   String
+  honeypot      String?
+
+  // Review workflow
+  status        SubmissionStatus @default(PENDING)
+  reviewedAt    DateTime?
+  reviewNote    String?
+
+  // Link to created moment (if approved)
+  momentId      String?  @unique
+  moment        Moment?  @relation(fields: [momentId], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

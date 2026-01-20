@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Azeret_Mono, Lora, Gupter } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AdminAuthProvider } from "@/components/admin/admin-auth-provider";
 import "./globals.css";
 
 // Azeret Mono for headings/display text
@@ -76,11 +77,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${azeretMono.variable} ${liter.variable} ${gupter.variable} antialiased`}>
-        <div className="min-h-screen flex flex-col">
-          <Header />
-          <main className="flex-1 -mt-[6px]">{children}</main>
-          <Footer />
-        </div>
+        <AdminAuthProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1 -mt-[6px]">{children}</main>
+            <Footer />
+          </div>
+        </AdminAuthProvider>
       </body>
     </html>
   );

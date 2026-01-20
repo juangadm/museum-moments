@@ -112,3 +112,163 @@ export function sanitizeFilename(name: string): string {
   const safeExt = ["jpg", "jpeg", "png", "webp", "gif"].includes(ext) ? ext : "jpg";
   return `moment-${Date.now()}.${safeExt}`;
 }
+
+/**
+ * Validates partial moment updates.
+ * All fields are optional, but if provided they must be valid.
+ * Slug changes are not allowed (returns error if slug is in payload).
+ */
+export function validateMomentUpdate(data: Record<string, unknown>): ValidationResult {
+  // Reject slug changes
+  if ("slug" in data) {
+    return { valid: false, error: "Slug cannot be changed" };
+  }
+
+  // Check if at least one field is being updated
+  const updateableFields = ["title", "category", "description", "imageUrl", "creatorName", "creatorUrl", "sourceUrl", "tags"];
+  const hasUpdate = updateableFields.some(field => field in data);
+  if (!hasUpdate) {
+    return { valid: false, error: "No fields to update" };
+  }
+
+  // Validate title if provided
+  if (data.title !== undefined) {
+    if (typeof data.title !== "string" || data.title.trim().length === 0) {
+      return { valid: false, error: "Title cannot be empty" };
+    }
+    if (data.title.length > MAX_TITLE_LENGTH) {
+      return { valid: false, error: `Title must be under ${MAX_TITLE_LENGTH} characters` };
+    }
+  }
+
+  // Validate category if provided
+  if (data.category !== undefined) {
+    if (typeof data.category !== "string") {
+      return { valid: false, error: "Category must be a string" };
+    }
+    if (!VALID_CATEGORIES.includes(data.category as Category)) {
+      return { valid: false, error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(", ")}` };
+    }
+  }
+
+  // Validate description if provided
+  if (data.description !== undefined) {
+    if (typeof data.description !== "string" || data.description.trim().length === 0) {
+      return { valid: false, error: "Description cannot be empty" };
+    }
+    if (data.description.length > MAX_DESCRIPTION_LENGTH) {
+      return { valid: false, error: `Description must be under ${MAX_DESCRIPTION_LENGTH} characters` };
+    }
+  }
+
+  // Validate imageUrl if provided
+  if (data.imageUrl !== undefined) {
+    if (typeof data.imageUrl !== "string") {
+      return { valid: false, error: "Image URL must be a string" };
+    }
+    if (!isValidUrl(data.imageUrl)) {
+      return { valid: false, error: "Invalid image URL format" };
+    }
+  }
+
+  // Validate creatorUrl if provided
+  if (data.creatorUrl !== undefined && data.creatorUrl !== null) {
+    if (typeof data.creatorUrl === "string" && data.creatorUrl.length > 0) {
+      if (!isValidUrl(data.creatorUrl)) {
+        return { valid: false, error: "Invalid creator URL format" };
+      }
+    }
+  }
+
+  // Validate sourceUrl if provided
+  if (data.sourceUrl !== undefined) {
+    if (typeof data.sourceUrl === "string" && data.sourceUrl.length > 0) {
+      if (!isValidUrl(data.sourceUrl)) {
+        return { valid: false, error: "Invalid source URL format" };
+      }
+    }
+  }
+
+  // Validate tags if provided
+  if (data.tags !== undefined) {
+    const tags = Array.isArray(data.tags)
+      ? data.tags
+      : typeof data.tags === "string"
+        ? data.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
+        : [];
+
+    if (tags.length > MAX_TAGS_COUNT) {
+      return { valid: false, error: `Maximum ${MAX_TAGS_COUNT} tags allowed` };
+    }
+    for (const tag of tags) {
+      if (typeof tag !== "string" || tag.length > MAX_TAG_LENGTH) {
+        return { valid: false, error: `Each tag must be under ${MAX_TAG_LENGTH} characters` };
+      }
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validates visitor submission input.
+ */
+export function validateSubmissionInput(data: Record<string, unknown>): ValidationResult {
+  // Required fields
+  if (!data.imageUrl || typeof data.imageUrl !== "string") {
+    return { valid: false, error: "Image is required" };
+  }
+  if (!isValidUrl(data.imageUrl)) {
+    return { valid: false, error: "Invalid image URL format" };
+  }
+
+  if (!data.sourceUrl || typeof data.sourceUrl !== "string" || data.sourceUrl.trim().length === 0) {
+    return { valid: false, error: "Source URL is required" };
+  }
+  if (!isValidUrl(data.sourceUrl)) {
+    return { valid: false, error: "Invalid source URL format" };
+  }
+
+  if (!data.creatorName || typeof data.creatorName !== "string" || data.creatorName.trim().length === 0) {
+    return { valid: false, error: "Creator name is required" };
+  }
+  if (data.creatorName.length > 200) {
+    return { valid: false, error: "Creator name must be under 200 characters" };
+  }
+
+  // Optional fields
+  if (data.creatorUrl !== undefined && data.creatorUrl !== null && data.creatorUrl !== "") {
+    if (typeof data.creatorUrl !== "string" || !isValidUrl(data.creatorUrl)) {
+      return { valid: false, error: "Invalid creator URL format" };
+    }
+  }
+
+  if (data.title !== undefined && data.title !== null && data.title !== "") {
+    if (typeof data.title !== "string") {
+      return { valid: false, error: "Title must be a string" };
+    }
+    if (data.title.length > MAX_TITLE_LENGTH) {
+      return { valid: false, error: `Title must be under ${MAX_TITLE_LENGTH} characters` };
+    }
+  }
+
+  if (data.description !== undefined && data.description !== null && data.description !== "") {
+    if (typeof data.description !== "string") {
+      return { valid: false, error: "Description must be a string" };
+    }
+    if (data.description.length > MAX_DESCRIPTION_LENGTH) {
+      return { valid: false, error: `Description must be under ${MAX_DESCRIPTION_LENGTH} characters` };
+    }
+  }
+
+  if (data.submitterNote !== undefined && data.submitterNote !== null && data.submitterNote !== "") {
+    if (typeof data.submitterNote !== "string") {
+      return { valid: false, error: "Note must be a string" };
+    }
+    if (data.submitterNote.length > 1000) {
+      return { valid: false, error: "Note must be under 1000 characters" };
+    }
+  }
+
+  return { valid: true };
+}
