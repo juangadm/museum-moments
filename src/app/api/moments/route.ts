@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { extractDominantColor } from "@/lib/color-extractor";
 import { validateMomentInput } from "@/lib/validation";
 import { generateTags } from "@/lib/auto-tagger";
+import { generateSlug } from "@/lib/utils";
 
 // DELETE /api/moments - Clear all moments (admin only)
 export async function DELETE(request: Request) {
@@ -65,12 +66,7 @@ export async function POST(request: Request) {
     const sourceUrl = (data.sourceUrl as string) || "";
 
     // Generate slug from title if not provided
-    const slug = (data.slug as string) || title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim();
+    const slug = (data.slug as string) || generateSlug(title);
 
     // Check if slug already exists
     const existing = await db.moment.findUnique({ where: { slug } });
