@@ -14,9 +14,11 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:clear": "tsx scripts/clear-moments.ts",
-    "db:import": "tsx scripts/bulk-import.ts"
+    "db:import": "tsx scripts/bulk-import.ts",
+    "notion:sync": "tsx scripts/notion-sync.ts"
   },
   "dependencies": {
+    "@notionhq/client": "^5.7.0",
     "@prisma/client": "^6.19.1",
     "@vercel/blob": "^2.0.0",
     "next": "16.1.1",
