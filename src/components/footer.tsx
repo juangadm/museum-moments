@@ -22,14 +22,12 @@ export function Footer() {
         >
           About
         </Link>
-        <a
-          href="https://forms.gle/YOUR_GOOGLE_FORM_ID"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/submit"
           className="font-display text-xs font-medium text-foreground-muted hover:text-foreground transition-colors uppercase"
         >
           Submit
-        </a>
+        </Link>
         <a
           href="https://x.com/juangadm_"
           target="_blank"
