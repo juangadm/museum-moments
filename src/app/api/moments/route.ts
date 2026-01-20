@@ -3,6 +3,29 @@ import { db } from "@/lib/db";
 import { extractDominantColor } from "@/lib/color-extractor";
 import { validateMomentInput } from "@/lib/validation";
 
+// DELETE /api/moments - Clear all moments (admin only)
+export async function DELETE(request: Request) {
+  try {
+    const password = request.headers.get("x-admin-password");
+    const envPassword = process.env.ADMIN_PASSWORD;
+
+    if (!envPassword) {
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    if (password !== envPassword) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const result = await db.moment.deleteMany({});
+
+    return NextResponse.json({ success: true, deleted: result.count });
+  } catch (error) {
+    console.error("Delete all moments error:", error);
+    return NextResponse.json({ error: "Failed to delete moments" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     // Verify admin password from header
