@@ -1,15 +1,10 @@
 // Simple validation helpers - no heavy deps needed
 
-export const VALID_CATEGORIES = [
-  "Branding",
-  "Images",
-  "Interfaces",
-  "Objects",
-  "Spaces",
-  "Typography",
-] as const;
+import { CATEGORIES, type Category } from "./constants";
 
-export type Category = (typeof VALID_CATEGORIES)[number];
+// Re-export for backwards compatibility
+export const VALID_CATEGORIES = CATEGORIES;
+export type { Category };
 
 export const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",

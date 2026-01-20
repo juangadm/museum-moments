@@ -2,6 +2,30 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { extractDominantColor } from "@/lib/color-extractor";
 import { validateMomentInput } from "@/lib/validation";
+import { generateTags } from "@/lib/auto-tagger";
+
+// DELETE /api/moments - Clear all moments (admin only)
+export async function DELETE(request: Request) {
+  try {
+    const password = request.headers.get("x-admin-password");
+    const envPassword = process.env.ADMIN_PASSWORD;
+
+    if (!envPassword) {
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    if (password !== envPassword) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const result = await db.moment.deleteMany({});
+
+    return NextResponse.json({ success: true, deleted: result.count });
+  } catch (error) {
+    console.error("Delete all moments error:", error);
+    return NextResponse.json({ error: "Failed to delete moments" }, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -72,6 +96,16 @@ export async function POST(request: Request) {
       tags = data.tags.filter((t): t is string => typeof t === "string");
     } else if (typeof data.tags === "string") {
       tags = data.tags.split(",").map((t) => t.trim()).filter(Boolean);
+    }
+
+    // Auto-generate tags if none provided
+    if (tags.length === 0) {
+      try {
+        tags = await generateTags(description, category);
+      } catch (e) {
+        console.error("Auto-tagging failed:", e);
+        // Continue without tags
+      }
     }
 
     const moment = await db.moment.create({

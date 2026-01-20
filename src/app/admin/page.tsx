@@ -3,33 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-const CATEGORIES = [
-  "Branding",
-  "Images",
-  "Interfaces",
-  "Objects",
-  "Spaces",
-  "Typography",
-] as const;
-
-const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  Branding: "logos, identity systems, brand guidelines",
-  Images: "photography, illustration, posters, visual art",
-  Interfaces: "web design, apps, product UI, dashboards",
-  Objects: "physical products, hardware, packaging",
-  Spaces: "architecture, interiors, retail environments",
-  Typography: "typefaces, lettering, type systems",
-};
-
-const TAG_SUGGESTIONS: Record<string, string[]> = {
-  Branding: ["logo", "identity", "guidelines", "rebrand", "wordmark", "visual-identity"],
-  Images: ["photography", "illustration", "poster", "print", "editorial", "visual"],
-  Interfaces: ["web", "app", "ui", "dashboard", "saas", "mobile", "product"],
-  Objects: ["hardware", "packaging", "product", "industrial", "physical"],
-  Spaces: ["architecture", "interior", "retail", "exhibition", "environment"],
-  Typography: ["typeface", "lettering", "variable", "specimen", "font", "type"],
-};
+import { CATEGORIES, CATEGORY_DESCRIPTIONS, TAG_SUGGESTIONS, isCategory } from "@/lib/constants";
 
 function generateSlug(title: string): string {
   return title
@@ -146,6 +120,9 @@ export default function AdminPage() {
 
       const response = await fetch("/api/upload", {
         method: "POST",
+        headers: {
+          "x-admin-password": password,
+        },
         body: formData,
       });
 
@@ -503,12 +480,12 @@ export default function AdminPage() {
             </label>
 
             {/* Tag suggestions */}
-            {category && TAG_SUGGESTIONS[category] && (
+            {isCategory(category) && (
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="font-display text-[10px] text-foreground-muted">
                   Suggestions:
                 </span>
-                {TAG_SUGGESTIONS[category].map((tag) => (
+                {TAG_SUGGESTIONS[category].map((tag: string) => (
                   <button
                     key={tag}
                     type="button"
