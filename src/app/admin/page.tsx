@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CATEGORIES, CATEGORY_DESCRIPTIONS, TAG_SUGGESTIONS } from "@/lib/constants";
+import { CATEGORIES, CATEGORY_DESCRIPTIONS, TAG_SUGGESTIONS, isCategory } from "@/lib/constants";
 
 function generateSlug(title: string): string {
   return title
@@ -480,12 +480,12 @@ export default function AdminPage() {
             </label>
 
             {/* Tag suggestions */}
-            {category && TAG_SUGGESTIONS[category] && (
+            {isCategory(category) && (
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="font-display text-[10px] text-foreground-muted">
                   Suggestions:
                 </span>
-                {TAG_SUGGESTIONS[category].map((tag) => (
+                {TAG_SUGGESTIONS[category].map((tag: string) => (
                   <button
                     key={tag}
                     type="button"

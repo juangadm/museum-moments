@@ -180,7 +180,8 @@ async function main() {
 
   console.log("Fetching Notion database...\n");
 
-  const response = await notion.databases.query({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const response = await (notion as any).databases.query({
     database_id: NOTION_DATABASE_ID,
     sorts: [{ timestamp: "created_time", direction: "ascending" }],
   });

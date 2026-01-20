@@ -11,6 +11,10 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
+export function isCategory(value: string): value is Category {
+  return CATEGORIES.includes(value as Category);
+}
+
 export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
   Branding: "logos, identity systems, brand guidelines",
   Images: "photography, illustration, posters, visual art",
