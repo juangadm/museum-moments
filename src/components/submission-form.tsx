@@ -203,12 +203,12 @@ export function SubmissionForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Image Upload */}
       <div ref={imageRef}>
-        <label className="block font-display text-[11px] text-foreground-muted mb-2">
+        <label className="block font-display text-[11px] text-foreground-muted mb-2 text-center">
           Image *
         </label>
         {imageUrl ? (
-          <div className="relative">
-            <div className="relative aspect-[3/4] max-w-[300px] border border-border rounded-sm overflow-hidden">
+          <div className="flex flex-col items-center">
+            <div className="relative aspect-[3/4] w-full max-w-[240px] border border-border rounded-sm overflow-hidden">
               <Image
                 src={imageUrl}
                 alt="Preview"
@@ -219,7 +219,7 @@ export function SubmissionForm() {
             <button
               type="button"
               onClick={() => setImageUrl("")}
-              className="mt-2 font-display text-[11px] text-red-600 hover:text-red-800"
+              className="mt-3 font-display text-[11px] text-red-600 hover:text-red-800"
             >
               Remove
             </button>
@@ -234,7 +234,7 @@ export function SubmissionForm() {
             onDragLeave={() => setIsDragging(false)}
             onClick={() => fileInputRef.current?.click()}
             className={`
-              aspect-[3/4] max-w-[300px] border-2 border-dashed rounded-sm flex items-center justify-center cursor-pointer
+              aspect-[3/4] w-full max-w-[240px] mx-auto border-2 border-dashed rounded-sm flex items-center justify-center cursor-pointer
               transition-colors
               ${isDragging ? "border-foreground bg-gray-50" : "border-border hover:border-foreground/50"}
               ${isUploading ? "opacity-50 pointer-events-none" : ""}
@@ -254,7 +254,7 @@ export function SubmissionForm() {
           </div>
         )}
         {getFieldError("imageUrl") && (
-          <p className="mt-2 font-body text-[12px] text-red-600" role="alert">
+          <p className="mt-2 font-body text-[12px] text-red-600 text-center" role="alert">
             {getFieldError("imageUrl")}
           </p>
         )}
