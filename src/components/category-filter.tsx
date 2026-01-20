@@ -1,16 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { CATEGORIES } from "@/lib/constants";
 
-const CATEGORIES = [
-  "All",
-  "Branding",
-  "Images",
-  "Interfaces",
-  "Objects",
-  "Spaces",
-  "Typography",
-];
+const FILTER_OPTIONS = ["All", ...CATEGORIES];
 
 export function CategoryFilter({ count }: { count: number }) {
   const router = useRouter();
@@ -32,7 +25,7 @@ export function CategoryFilter({ count }: { count: number }) {
     <div className="px-3">
       <div className="inline-block">
         <ul className="flex gap-3 overflow-x-auto scrollbar-hide pt-[3px] pb-3 px-[0.1px]">
-          {CATEGORIES.map((category) => {
+          {FILTER_OPTIONS.map((category) => {
             const isActive = category === currentCategory;
             return (
               <li key={category}>

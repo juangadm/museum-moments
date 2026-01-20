@@ -13,11 +13,11 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:clear": "tsx scripts/clear-moments.ts",
     "db:import": "tsx scripts/bulk-import.ts",
-    "notion:sync": "tsx scripts/notion-sync.ts"
+    "notion:sync": "tsx scripts/notion-sync-api.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "@notionhq/client": "^5.7.0",
     "@prisma/client": "^6.19.1",
     "@vercel/blob": "^2.0.0",

@@ -79,6 +79,9 @@ async function uploadImage(imageUrl: string, slug: string): Promise<string | nul
     console.log(`    Uploading to Vercel Blob via API...`);
     const uploadResponse = await fetch(`${SITE_URL}/api/upload`, {
       method: "POST",
+      headers: {
+        "x-admin-password": ADMIN_PASSWORD!,
+      },
       body: formData,
     });
 
