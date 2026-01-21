@@ -99,7 +99,7 @@ export function Header() {
             <Link href="/" className="font-logo text-2xl uppercase tracking-tight">
               Museum Moments
             </Link>
-            <p className="text-[12px] text-black font-body">
+            <p className="hidden sm:block text-[12px] text-black font-body">
               an exhibition{" "}
               <button
                 onClick={() => window.open("https://juangabriel.xyz", "_blank")}

@@ -87,7 +87,7 @@ export function CategoryFilter({ count }: { count: number }) {
                   onPointerDown={() => setPressedCategory(category)}
                   onPointerUp={() => setPressedCategory(null)}
                   onPointerLeave={() => setPressedCategory(null)}
-                  className={`relative font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap px-[2px] py-[1px] rounded-[4px] cursor-pointer transition-colors duration-150 ease-out ${isActive ? "text-foreground" : "text-foreground/70 hover:bg-black/6"}`}
+                  className={`relative font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap px-3 py-2.5 sm:px-[2px] sm:py-[1px] rounded-[4px] cursor-pointer transition-colors duration-150 ease-out focus-ring active:opacity-70 ${isActive ? "text-foreground" : "text-foreground/70 hover:bg-black/6"}`}
                 >
                   <span
                     className="inline-block transition-transform duration-75 ease-out"
@@ -104,7 +104,7 @@ export function CategoryFilter({ count }: { count: number }) {
 
           {/* Count display */}
           <li className="flex items-center">
-            <span className="font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-foreground/70 px-[2px] py-[1px]">
+            <span className="font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-foreground/70 px-3 py-2.5 sm:px-[2px] sm:py-[1px]">
               ( {count} )
             </span>
           </li>
