@@ -60,7 +60,7 @@ export default async function MomentPage({ params }: Props) {
     <MomentEditWrapper moment={moment}>
       <MomentNavigation prev={prev} next={next} />
 
-      <article className="max-w-4xl mx-auto px-6 py-16">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
         {/* Title and Meta - stacked on mobile, row on desktop */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 mb-6">
           {/* Title */}
@@ -170,7 +170,7 @@ export default async function MomentPage({ params }: Props) {
             {moment.tags.map((tag) => (
               <span
                 key={tag}
-                className="font-display text-[11px] sm:text-[10px] px-3 py-2 sm:px-2 sm:py-1 border border-border text-foreground-muted hover:border-foreground hover:text-foreground active:bg-foreground/5 transition-colors cursor-pointer"
+                className="font-display text-[10px] px-2 py-1 border border-border text-foreground-muted hover:border-foreground hover:text-foreground active:bg-foreground/5 transition-colors cursor-pointer"
                 style={{ borderRadius: '0' }}
               >
                 {tag}

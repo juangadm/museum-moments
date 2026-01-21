@@ -29,7 +29,7 @@ async function MomentsGrid({
   }
 
   return (
-    <div className="columns-1 sm:columns-2 lg:columns-4 gap-3">
+    <div className="columns-2 lg:columns-4 gap-3">
       {moments.map((moment) => (
         <MomentCard key={moment.id} moment={moment} />
       ))}
