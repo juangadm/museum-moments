@@ -60,19 +60,19 @@ export default async function MomentPage({ params }: Props) {
     <MomentEditWrapper moment={moment}>
       <MomentNavigation prev={prev} next={next} />
 
-      <article className="max-w-4xl mx-auto px-6 py-16">
-        {/* Title and Meta row on same line */}
-        <div className="flex items-baseline justify-between gap-8 mb-6">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        {/* Title and Meta - stacked on mobile, row on desktop */}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 mb-6">
           {/* Title */}
-          <h1 className="font-display font-semibold leading-tight flex-shrink" style={{ textTransform: 'uppercase', fontSize: '18px' }}>
+          <h1 className="font-display font-semibold leading-tight" style={{ textTransform: 'uppercase', fontSize: '18px' }}>
             {moment.title}
           </h1>
 
           {/* Meta row - Category • Creator */}
-          <div className="text-sm whitespace-nowrap flex-shrink-0">
+          <div className="text-sm sm:whitespace-nowrap sm:flex-shrink-0">
             <Link
               href={`/?category=${encodeURIComponent(moment.category)}`}
-              className="text-neutral-500 hover:text-black transition-colors"
+              className="text-neutral-500 hover:text-black active:opacity-70 transition-colors focus-ring"
             >
               {moment.category}
             </Link>
@@ -84,7 +84,7 @@ export default async function MomentPage({ params }: Props) {
                     href={moment.creatorUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-black transition-colors"
+                    className="text-neutral-500 hover:text-black active:opacity-70 transition-colors focus-ring"
                   >
                     {moment.creatorName} ↗
                   </a>
@@ -170,7 +170,7 @@ export default async function MomentPage({ params }: Props) {
             {moment.tags.map((tag) => (
               <span
                 key={tag}
-                className="font-display text-[10px] px-2 py-1 border border-border text-foreground-muted hover:border-foreground hover:text-foreground transition-colors cursor-pointer"
+                className="font-display text-[10px] px-2 py-1 border border-border text-foreground-muted hover:border-foreground hover:text-foreground active:bg-foreground/5 transition-colors cursor-pointer"
                 style={{ borderRadius: '0' }}
               >
                 {tag}
@@ -186,7 +186,7 @@ export default async function MomentPage({ params }: Props) {
               {prev && (
                 <Link
                   href={`/m/${prev.slug}`}
-                  className="group inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  className="group inline-flex items-center gap-2 py-2 hover:opacity-70 active:opacity-50 transition-opacity focus-ring"
                 >
                   <span aria-hidden="true" className="text-2xl">←</span>
                   <span className="font-body text-xs text-foreground-muted">
@@ -195,7 +195,7 @@ export default async function MomentPage({ params }: Props) {
                 </Link>
               )}
             </div>
-            <div className="flex-1 text-center">
+            <div className="hidden sm:flex flex-1 justify-center">
               <span className="font-body text-xs text-foreground-muted">
                 Use ← → to navigate
               </span>
@@ -204,7 +204,7 @@ export default async function MomentPage({ params }: Props) {
               {next && (
                 <Link
                   href={`/m/${next.slug}`}
-                  className="group inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  className="group inline-flex items-center gap-2 py-2 hover:opacity-70 active:opacity-50 transition-opacity focus-ring"
                 >
                   <span className="font-body text-xs text-foreground-muted">
                     Next

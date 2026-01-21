@@ -11,9 +11,9 @@ export function CategoryFilter({ count }: { count: number }) {
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category") || "All";
 
-  // Refs for measuring button positions
+  // Refs for measuring text positions (for tight indicator)
   const containerRef = useRef<HTMLUListElement>(null);
-  const buttonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const textRefs = useRef<Map<string, HTMLSpanElement>>(new Map());
 
   // Sliding indicator position
   const [indicatorStyle, setIndicatorStyle] = useState({
@@ -29,16 +29,16 @@ export function CategoryFilter({ count }: { count: number }) {
 
   // Update indicator position when active category changes
   useLayoutEffect(() => {
-    const activeButton = buttonRefs.current.get(currentCategory);
-    if (activeButton && containerRef.current) {
+    const activeText = textRefs.current.get(currentCategory);
+    if (activeText && containerRef.current) {
       const containerRect = containerRef.current.getBoundingClientRect();
-      const buttonRect = activeButton.getBoundingClientRect();
+      const textRect = activeText.getBoundingClientRect();
 
       setIndicatorStyle({
-        left: buttonRect.left - containerRect.left,
-        top: buttonRect.top - containerRect.top,
-        width: buttonRect.width,
-        height: buttonRect.height,
+        left: textRect.left - containerRect.left - 2,
+        top: textRect.top - containerRect.top - 1,
+        width: textRect.width + 4,
+        height: textRect.height + 2,
         opacity: 1,
       });
     }
@@ -56,12 +56,11 @@ export function CategoryFilter({ count }: { count: number }) {
   }
 
   return (
-    <div className="px-3">
-      <div className="inline-block">
-        <ul
-          ref={containerRef}
-          className="relative flex gap-3 overflow-x-auto scrollbar-hide pt-[3px] pb-3 px-[0.1px]"
-        >
+    <div className="px-3 overflow-x-auto scrollbar-hide">
+      <ul
+        ref={containerRef}
+        className="relative flex gap-3 pt-[3px] pb-3"
+      >
           {/* Sliding indicator */}
           <div
             className="absolute bg-black/6 rounded-[4px] transition-all duration-200 pointer-events-none"
@@ -80,17 +79,17 @@ export function CategoryFilter({ count }: { count: number }) {
             return (
               <li key={category}>
                 <button
-                  ref={(el) => {
-                    if (el) buttonRefs.current.set(category, el);
-                  }}
                   onClick={() => handleCategoryClick(category)}
                   onPointerDown={() => setPressedCategory(category)}
                   onPointerUp={() => setPressedCategory(null)}
                   onPointerLeave={() => setPressedCategory(null)}
-                  className={`relative font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap px-[2px] py-[1px] rounded-[4px] cursor-pointer transition-colors duration-150 ease-out ${isActive ? "text-foreground" : "text-foreground/70 hover:bg-black/6"}`}
+                  className={`relative font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap min-h-[44px] flex items-center cursor-pointer transition-colors duration-150 ease-out focus-ring active:opacity-70 ${isActive ? "text-foreground" : "text-foreground/70"}`}
                 >
                   <span
-                    className="inline-block transition-transform duration-75 ease-out"
+                    ref={(el) => {
+                      if (el) textRefs.current.set(category, el);
+                    }}
+                    className={`inline-block px-[2px] py-[1px] rounded-[4px] transition-all duration-75 ease-out ${!isActive ? "hover:bg-black/6" : ""}`}
                     style={{
                       transform: pressedCategory === category ? "scale(0.95)" : "scale(1)",
                     }}
@@ -108,8 +107,7 @@ export function CategoryFilter({ count }: { count: number }) {
               ( {count} )
             </span>
           </li>
-        </ul>
-      </div>
+      </ul>
     </div>
   );
 }
