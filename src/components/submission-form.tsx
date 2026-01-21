@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
 
 type FieldError = {
@@ -16,7 +16,6 @@ export function SubmissionForm() {
   const [creatorUrl, setCreatorUrl] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [submitterNote, setSubmitterNote] = useState("");
   const [honeypot, setHoneypot] = useState(""); // Hidden field for bots
 
   // Upload state
@@ -27,8 +26,18 @@ export function SubmissionForm() {
   // Submit state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [showSuccessContent, setShowSuccessContent] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldError[]>([]);
   const [generalError, setGeneralError] = useState("");
+
+  // Trigger success animation after state change
+  useEffect(() => {
+    if (submitSuccess) {
+      // Small delay to allow form fade-out, then show success content
+      const timer = setTimeout(() => setShowSuccessContent(true), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [submitSuccess]);
 
   // Refs for focus management
   const imageRef = useRef<HTMLDivElement>(null);
@@ -161,7 +170,6 @@ export function SubmissionForm() {
           creatorUrl: creatorUrl.trim() || null,
           title: title.trim() || null,
           description: description.trim() || null,
-          submitterNote: submitterNote.trim() || null,
           honeypot, // Will be empty for humans
         }),
       });
@@ -186,15 +194,90 @@ export function SubmissionForm() {
     }
   };
 
-  // Success state
+  // Success state with animation
   if (submitSuccess) {
     return (
       <div className="text-center py-16">
-        <h2 className="font-display text-sm font-medium mb-4">Thank You</h2>
-        <p className="font-body text-lg text-foreground-muted max-w-md mx-auto">
-          Your nomination has been received. We review submissions weekly. If selected,
-          it will appear in the archive.
-        </p>
+        <div
+          className={`transition-all duration-300 ${
+            showSuccessContent
+              ? "opacity-100 scale-100"
+              : "opacity-0 scale-95"
+          }`}
+          style={{
+            transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+          }}
+        >
+          {/* Animated Checkmark */}
+          <div className="flex justify-center mb-6">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 48 48"
+              fill="none"
+              className="text-foreground"
+            >
+              <circle
+                cx="24"
+                cy="24"
+                r="22"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className={`${
+                  showSuccessContent ? "animate-circle-draw" : ""
+                }`}
+                style={{
+                  strokeDasharray: 138,
+                  strokeDashoffset: showSuccessContent ? 0 : 138,
+                  transition: "stroke-dashoffset 400ms ease-out",
+                }}
+              />
+              <path
+                d="M16 24L22 30L32 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{
+                  strokeDasharray: 28,
+                  strokeDashoffset: showSuccessContent ? 0 : 28,
+                  transition: "stroke-dashoffset 250ms ease-out 200ms",
+                }}
+              />
+            </svg>
+          </div>
+
+          {/* Title - staggers in after checkmark */}
+          <h2
+            className={`font-display text-sm font-medium mb-4 transition-all duration-300 ${
+              showSuccessContent
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2"
+            }`}
+            style={{
+              transitionDelay: "150ms",
+              transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+          >
+            Thank You
+          </h2>
+
+          {/* Description - staggers in after title */}
+          <p
+            className={`font-body text-lg text-foreground-muted max-w-md mx-auto transition-all duration-300 ${
+              showSuccessContent
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2"
+            }`}
+            style={{
+              transitionDelay: "250ms",
+              transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+          >
+            Your nomination has been received. We review submissions weekly. If selected,
+            it will appear in the archive.
+          </p>
+        </div>
       </div>
     );
   }
@@ -355,24 +438,6 @@ export function SubmissionForm() {
           rows={3}
           className="w-full px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white resize-y"
           placeholder="Tell us what makes this special... (optional)"
-        />
-        <p className="mt-1 font-body text-[11px] text-foreground-muted">
-          Optional - we write the editorial description
-        </p>
-      </div>
-
-      {/* Note to Curator (optional) */}
-      <div>
-        <label htmlFor="submitterNote" className="block font-display text-[11px] text-foreground-muted mb-2">
-          Note to Curator
-        </label>
-        <textarea
-          id="submitterNote"
-          value={submitterNote}
-          onChange={(e) => setSubmitterNote(e.target.value)}
-          rows={2}
-          className="w-full px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white resize-y"
-          placeholder="How you found it, context, etc..."
         />
       </div>
 
