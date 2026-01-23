@@ -3,6 +3,7 @@ import { Azeret_Mono, Lora, Gupter } from "next/font/google";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AdminAuthProvider } from "@/components/admin/admin-auth-provider";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Azeret Mono for headings/display text
@@ -87,6 +88,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </AdminAuthProvider>
+        <Analytics />
       </body>
     </html>
   );
