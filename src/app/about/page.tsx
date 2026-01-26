@@ -29,7 +29,7 @@ export default function AboutPage() {
               href="https://www.desigeist.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline underline-offset-2 hover:text-foreground-muted transition-colors"
+              className="underline decoration-1 underline-offset-2 hover:text-foreground-muted transition-colors"
             >
               Desigeist
             </a>
