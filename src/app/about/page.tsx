@@ -23,6 +23,19 @@ export default function AboutPage() {
             Human taste, human judgment, human care. A counter to the slop.
           </p>
 
+          <p>
+            Inspired by my colleague Pablo Stanley&apos;s{" "}
+            <a
+              href="https://www.desigeist.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-foreground-muted transition-colors"
+            >
+              Desigeist
+            </a>
+            .
+          </p>
+
           <p className="text-foreground-muted">
             Stop the slop. Build the beautiful.
           </p>

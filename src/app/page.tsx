@@ -58,7 +58,7 @@ export default async function Home(props: { searchParams: SearchParams }) {
         </Suspense>
       </div>
 
-      <div className="px-3 py-16">
+      <div className="px-3 pt-3 pb-16">
         <Suspense
           fallback={
             <div className="py-24 flex items-center justify-center">
