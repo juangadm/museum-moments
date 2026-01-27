@@ -13,6 +13,36 @@ export const ALLOWED_IMAGE_TYPES = [
   "image/gif",
 ];
 
+export const ALLOWED_VIDEO_TYPES = [
+  "video/mp4",
+  "video/webm",
+];
+
+export const ALLOWED_MEDIA_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES];
+
+export type MediaType = "image" | "gif" | "video";
+
+export function getMediaTypeFromUrl(url: string): MediaType {
+  const lowercaseUrl = url.toLowerCase();
+  if (lowercaseUrl.endsWith(".gif")) return "gif";
+  if (lowercaseUrl.endsWith(".mp4") || lowercaseUrl.endsWith(".webm")) return "video";
+  return "image";
+}
+
+export function getMediaTypeFromMimeType(mimeType: string): MediaType {
+  if (mimeType === "image/gif") return "gif";
+  if (ALLOWED_VIDEO_TYPES.includes(mimeType)) return "video";
+  return "image";
+}
+
+export function isVideoUrl(url: string): boolean {
+  return getMediaTypeFromUrl(url) === "video";
+}
+
+export function isGifUrl(url: string): boolean {
+  return getMediaTypeFromUrl(url) === "gif";
+}
+
 export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 export const MAX_TITLE_LENGTH = 200;
 export const MAX_DESCRIPTION_LENGTH = 5000;
@@ -88,8 +118,8 @@ export function validateMomentInput(data: Record<string, unknown>): ValidationRe
 }
 
 export function validateFileUpload(file: File): ValidationResult {
-  if (!file.type || !ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    return { valid: false, error: `Invalid file type. Allowed: ${ALLOWED_IMAGE_TYPES.join(", ")}` };
+  if (!file.type || !ALLOWED_MEDIA_TYPES.includes(file.type)) {
+    return { valid: false, error: `Invalid file type. Allowed: ${ALLOWED_MEDIA_TYPES.join(", ")}` };
   }
   if (file.size > MAX_FILE_SIZE) {
     return { valid: false, error: `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB` };
@@ -109,7 +139,7 @@ function isValidUrl(str: string): boolean {
 // Sanitize filename for safe storage
 export function sanitizeFilename(name: string): string {
   const ext = name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeExt = ["jpg", "jpeg", "png", "webp", "gif"].includes(ext) ? ext : "jpg";
+  const safeExt = ["jpg", "jpeg", "png", "webp", "gif", "mp4", "webm"].includes(ext) ? ext : "jpg";
   return `moment-${Date.now()}.${safeExt}`;
 }
 

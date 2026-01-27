@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CATEGORIES, CATEGORY_DESCRIPTIONS, TAG_SUGGESTIONS, isCategory } from "@/lib/constants";
 import { generateSlug } from "@/lib/utils";
+import { isVideoUrl, isGifUrl } from "@/lib/validation";
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -92,7 +93,7 @@ export default function AdminPage() {
     setIsDragging(false);
 
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && (file.type.startsWith("image/") || file.type.startsWith("video/"))) {
       await uploadFile(file);
     }
   }, []);
@@ -411,12 +412,24 @@ export default function AdminPage() {
             {imageUrl ? (
               <div className="relative">
                 <div className="relative aspect-[3/4] max-w-[200px] border border-border rounded-sm overflow-hidden">
-                  <Image
-                    src={imageUrl}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
+                  {isVideoUrl(imageUrl) ? (
+                    <video
+                      src={imageUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={imageUrl}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized={isGifUrl(imageUrl)}
+                    />
+                  )}
                 </div>
                 <button
                   type="button"
@@ -445,12 +458,12 @@ export default function AdminPage() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/*,video/mp4,video/webm"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
                 <p className="font-body text-[13px] text-foreground-muted">
-                  {isUploading ? "Uploading..." : "Drop image here or click to upload"}
+                  {isUploading ? "Uploading..." : "Drop image, GIF, or video here or click to upload"}
                 </p>
               </div>
             )}

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Moment } from "@/lib/moments";
+import { MediaDisplay } from "./media-display";
 
 type Props = {
   moments: Moment[];
@@ -24,10 +24,10 @@ export function RelatedMoments({ moments }: Props) {
                 className="group block"
               >
                 <article className="relative transition-opacity group-hover:opacity-95">
-                  {/* Image */}
+                  {/* Image/Video */}
                   {moment.imageUrl && (
                     <div className="relative border border-border overflow-hidden">
-                      <Image
+                      <MediaDisplay
                         src={moment.imageUrl}
                         alt={moment.title}
                         width={400}

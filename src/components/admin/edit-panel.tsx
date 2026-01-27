@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
 import { CATEGORIES, TAG_SUGGESTIONS, isCategory } from "@/lib/constants";
 import type { Moment } from "@/lib/moments";
+import { isVideoUrl, isGifUrl } from "@/lib/validation";
 
 type EditPanelProps = {
   moment: Moment;
@@ -123,7 +124,7 @@ export function EditPanel({
     setIsDragging(false);
 
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
+    if (file && (file.type.startsWith("image/") || file.type.startsWith("video/"))) {
       await uploadFile(file);
     }
   }, [adminPassword]);
@@ -297,20 +298,32 @@ export function EditPanel({
 
         {/* Form */}
         <div className="p-6 space-y-6">
-          {/* Image Upload (Hero Action) */}
+          {/* Media Upload (Hero Action) */}
           <div>
             <label className="block font-display text-[11px] text-foreground-muted mb-2">
-              Image *
+              Media *
             </label>
             {imageUrl ? (
               <div className="relative">
                 <div className="relative aspect-[3/4] max-w-full border border-border rounded-sm overflow-hidden">
-                  <Image
-                    src={imageUrl}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
+                  {isVideoUrl(imageUrl) ? (
+                    <video
+                      src={imageUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src={imageUrl}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized={isGifUrl(imageUrl)}
+                    />
+                  )}
                   {/* Overlay for replacing */}
                   <div
                     onDrop={handleDrop}
@@ -327,14 +340,14 @@ export function EditPanel({
                     `}
                   >
                     <span className="font-display text-[11px] text-white uppercase bg-black/70 px-3 py-2 rounded-sm">
-                      {isUploading ? "Uploading..." : "Replace Image"}
+                      {isUploading ? "Uploading..." : "Replace Media"}
                     </span>
                   </div>
                 </div>
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/*,video/mp4,video/webm"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
@@ -343,7 +356,7 @@ export function EditPanel({
                   onClick={() => setImageUrl("")}
                   className="mt-2 font-display text-[11px] text-red-600 hover:text-red-800"
                 >
-                  Remove Image
+                  Remove Media
                 </button>
               </div>
             ) : (
@@ -365,12 +378,12 @@ export function EditPanel({
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/*,video/mp4,video/webm"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
                 <p className="font-body text-[13px] text-foreground-muted text-center px-4">
-                  {isUploading ? "Uploading..." : "Drop image here or click to upload"}
+                  {isUploading ? "Uploading..." : "Drop image, GIF, or video here"}
                 </p>
               </div>
             )}
