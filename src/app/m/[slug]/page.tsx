@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { MediaDisplay } from "@/components/media-display";
 import {
   getMomentBySlug,
   getAdjacentMoments,
@@ -96,7 +96,7 @@ export default async function MomentPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Hero image */}
+        {/* Hero image/video */}
         {moment.imageUrl && (
           <div className="mb-8">
             <a
@@ -105,7 +105,7 @@ export default async function MomentPage({ params }: Props) {
               rel="noopener noreferrer"
               className="block"
             >
-              <Image
+              <MediaDisplay
                 src={moment.imageUrl}
                 alt={moment.title}
                 width={1200}
