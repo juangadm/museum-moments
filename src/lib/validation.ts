@@ -120,8 +120,12 @@ export function validateMomentInput(data: Record<string, unknown>): ValidationRe
 }
 
 export function validateFileUpload(file: File): ValidationResult {
-  if (!file.type || !ALLOWED_MEDIA_TYPES.includes(file.type)) {
-    return { valid: false, error: `Invalid file type. Allowed: ${ALLOWED_MEDIA_TYPES.join(", ")}` };
+  // Accept any image/* or video/* MIME type for flexibility
+  const isImage = file.type.startsWith("image/");
+  const isVideo = file.type.startsWith("video/");
+
+  if (!file.type || (!isImage && !isVideo)) {
+    return { valid: false, error: `Invalid file type "${file.type}". Must be an image or video.` };
   }
   if (file.size > MAX_FILE_SIZE) {
     return { valid: false, error: `File too large. Maximum size: ${MAX_FILE_SIZE / 1024 / 1024}MB` };
