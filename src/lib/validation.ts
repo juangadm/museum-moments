@@ -16,6 +16,8 @@ export const ALLOWED_IMAGE_TYPES = [
 export const ALLOWED_VIDEO_TYPES = [
   "video/mp4",
   "video/webm",
+  "video/quicktime", // .mov files
+  "video/x-m4v",     // .m4v files
 ];
 
 export const ALLOWED_MEDIA_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES];
@@ -25,7 +27,7 @@ export type MediaType = "image" | "gif" | "video";
 export function getMediaTypeFromUrl(url: string): MediaType {
   const lowercaseUrl = url.toLowerCase();
   if (lowercaseUrl.endsWith(".gif")) return "gif";
-  if (lowercaseUrl.endsWith(".mp4") || lowercaseUrl.endsWith(".webm")) return "video";
+  if (lowercaseUrl.endsWith(".mp4") || lowercaseUrl.endsWith(".webm") || lowercaseUrl.endsWith(".mov") || lowercaseUrl.endsWith(".m4v")) return "video";
   return "image";
 }
 
@@ -139,7 +141,7 @@ function isValidUrl(str: string): boolean {
 // Sanitize filename for safe storage
 export function sanitizeFilename(name: string): string {
   const ext = name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeExt = ["jpg", "jpeg", "png", "webp", "gif", "mp4", "webm"].includes(ext) ? ext : "jpg";
+  const safeExt = ["jpg", "jpeg", "png", "webp", "gif", "mp4", "webm", "mov", "m4v"].includes(ext) ? ext : "jpg";
   return `moment-${Date.now()}.${safeExt}`;
 }
 

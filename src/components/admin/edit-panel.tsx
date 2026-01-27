@@ -347,7 +347,7 @@ export function EditPanel({
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*,video/mp4,video/webm"
+                  accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
@@ -378,7 +378,7 @@ export function EditPanel({
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*,video/mp4,video/webm"
+                  accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
