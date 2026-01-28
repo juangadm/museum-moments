@@ -36,6 +36,16 @@ export default function AdminPage() {
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState("");
 
+  // URL pre-fill state
+  const [prefillUrl, setPrefillUrl] = useState("");
+  const [isPrefilling, setIsPrefilling] = useState(false);
+  const [prefillError, setPrefillError] = useState("");
+  const [extractedImages, setExtractedImages] = useState<string[]>([]);
+
+  // Tag generation state
+  const [isGeneratingTags, setIsGeneratingTags] = useState(false);
+  const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
+
   // Check localStorage for saved password on mount
   useEffect(() => {
     const savedPassword = localStorage.getItem("admin-password");
@@ -168,6 +178,126 @@ export default function AdminPage() {
     setTagInput("");
     setSubmitSuccess(null);
     setSubmitError("");
+    setPrefillUrl("");
+    setPrefillError("");
+    setExtractedImages([]);
+    setSuggestedTags([]);
+  };
+
+  const handlePrefillFromUrl = async () => {
+    if (!prefillUrl.trim()) return;
+
+    setIsPrefilling(true);
+    setPrefillError("");
+    setExtractedImages([]);
+
+    try {
+      const response = await fetch("/api/scrape-url", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+        body: JSON.stringify({ url: prefillUrl }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch URL");
+      }
+
+      // Pre-fill form fields
+      if (data.title && !title) {
+        setTitle(data.title);
+      }
+      if (data.creator && !creatorName) {
+        setCreatorName(data.creator);
+      }
+      if (data.sourceUrl && !sourceUrl) {
+        setSourceUrl(data.sourceUrl);
+      }
+      // Auto-select category if suggested and valid
+      if (data.category && !category && isCategory(data.category)) {
+        setCategory(data.category);
+      }
+      // Store extracted images for selection
+      if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+        setExtractedImages(data.images);
+      }
+    } catch (error) {
+      setPrefillError(error instanceof Error ? error.message : "Failed to fetch URL");
+    } finally {
+      setIsPrefilling(false);
+    }
+  };
+
+  const handleSelectExtractedImage = async (imageUrl: string) => {
+    // Download the image and upload it to Vercel Blob
+    setIsUploading(true);
+    try {
+      // Fetch the image
+      const response = await fetch("/api/proxy-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+        body: JSON.stringify({ url: imageUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const data = await response.json();
+      setImageUrl(data.url);
+      setExtractedImages([]); // Clear extracted images after selection
+    } catch (error) {
+      console.error("Failed to use extracted image:", error);
+      alert("Failed to use this image. Please try uploading manually.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleGenerateTags = async () => {
+    if (!description.trim()) return;
+
+    setIsGeneratingTags(true);
+    setSuggestedTags([]);
+
+    try {
+      const response = await fetch("/api/generate-tags", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+        body: JSON.stringify({ title, description, category }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate tags");
+      }
+
+      // Filter out tags that are already selected
+      const newSuggestions = data.tags.filter((tag: string) => !tags.includes(tag));
+      setSuggestedTags(newSuggestions);
+    } catch (error) {
+      console.error("Generate tags error:", error);
+    } finally {
+      setIsGeneratingTags(false);
+    }
+  };
+
+  const handleSuggestedTagClick = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+    setSuggestedTags(suggestedTags.filter((t) => t !== tag));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -312,6 +442,39 @@ export default function AdminPage() {
             ADD NEW MOMENT
           </h2>
 
+          {/* URL Pre-fill */}
+          <div className="p-4 bg-white border border-dashed border-border rounded-sm">
+            <label className="block font-display text-[11px] text-foreground-muted mb-2">
+              Quick fill from URL (optional)
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={prefillUrl}
+                onChange={(e) => setPrefillUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handlePrefillFromUrl();
+                  }
+                }}
+                className="flex-1 px-4 py-2 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
+                placeholder="Paste a URL to auto-fill title, creator, source..."
+              />
+              <button
+                type="button"
+                onClick={handlePrefillFromUrl}
+                disabled={isPrefilling || !prefillUrl.trim()}
+                className="px-4 py-2 font-display text-[11px] uppercase border border-border hover:border-foreground transition-colors disabled:opacity-50"
+              >
+                {isPrefilling ? "Loading..." : "Fetch"}
+              </button>
+            </div>
+            {prefillError && (
+              <p className="mt-2 font-body text-[12px] text-red-600">{prefillError}</p>
+            )}
+          </div>
+
           {/* Title */}
           <div>
             <label className="block font-display text-[11px] text-foreground-muted mb-2">
@@ -440,31 +603,65 @@ export default function AdminPage() {
                 </button>
               </div>
             ) : (
-              <div
-                onDrop={handleDrop}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onClick={() => fileInputRef.current?.click()}
-                className={`
-                  border-2 border-dashed rounded-sm p-8 text-center cursor-pointer
-                  transition-colors
-                  ${isDragging ? "border-foreground bg-gray-50" : "border-border hover:border-foreground/50"}
-                  ${isUploading ? "opacity-50 pointer-events-none" : ""}
-                `}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                <p className="font-body text-[13px] text-foreground-muted">
-                  {isUploading ? "Uploading..." : "Drop image, GIF, or video here or click to upload"}
-                </p>
+              <div className="space-y-4">
+                {/* Extracted images from URL */}
+                {extractedImages.length > 0 && (
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-sm">
+                    <p className="font-display text-[10px] text-blue-700 mb-3">
+                      EXTRACTED IMAGES (click to use):
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {extractedImages.map((img, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleSelectExtractedImage(img)}
+                          disabled={isUploading}
+                          className="relative w-24 h-32 border-2 border-blue-300 hover:border-blue-500 rounded-sm overflow-hidden transition-colors disabled:opacity-50"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={img}
+                            alt={`Extracted ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Hide broken images
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Drop zone for manual upload */}
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`
+                    border-2 border-dashed rounded-sm p-8 text-center cursor-pointer
+                    transition-colors
+                    ${isDragging ? "border-foreground bg-gray-50" : "border-border hover:border-foreground/50"}
+                    ${isUploading ? "opacity-50 pointer-events-none" : ""}
+                  `}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  <p className="font-body text-[13px] text-foreground-muted">
+                    {isUploading ? "Uploading..." : extractedImages.length > 0 ? "Or drop your own image here" : "Drop image, GIF, or video here or click to upload"}
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -485,15 +682,44 @@ export default function AdminPage() {
 
           {/* Tags */}
           <div>
-            <label className="block font-display text-[11px] text-foreground-muted mb-2">
-              Tags
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="font-display text-[11px] text-foreground-muted">
+                Tags
+              </label>
+              <button
+                type="button"
+                onClick={handleGenerateTags}
+                disabled={isGeneratingTags || !description.trim()}
+                className="px-3 py-1 font-display text-[10px] uppercase border border-border hover:border-foreground transition-colors disabled:opacity-50 rounded-sm"
+              >
+                {isGeneratingTags ? "Generating..." : "Generate from description"}
+              </button>
+            </div>
 
-            {/* Tag suggestions */}
+            {/* AI-generated tag suggestions */}
+            {suggestedTags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3 p-3 bg-blue-50 border border-blue-200 rounded-sm">
+                <span className="font-display text-[10px] text-blue-700 w-full mb-1">
+                  AI suggestions (click to add):
+                </span>
+                {suggestedTags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => handleSuggestedTagClick(tag)}
+                    className="px-2 py-1 font-display text-[10px] border border-blue-300 text-blue-800 hover:bg-blue-100 rounded-sm transition-colors"
+                  >
+                    + {tag}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Category-based tag suggestions */}
             {isCategory(category) && (
               <div className="flex flex-wrap gap-2 mb-3">
                 <span className="font-display text-[10px] text-foreground-muted">
-                  Suggestions:
+                  Category suggestions:
                 </span>
                 {TAG_SUGGESTIONS[category].map((tag: string) => (
                   <button
