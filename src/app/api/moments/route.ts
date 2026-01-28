@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { extractDominantColor } from "@/lib/color-extractor";
 import { validateMomentInput } from "@/lib/validation";
 import { generateTags } from "@/lib/auto-tagger";
 import { generateSlug } from "@/lib/utils";
@@ -77,15 +76,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Extract dominant color from image
-    let dominantColor: string | null = null;
-    try {
-      dominantColor = await extractDominantColor(imageUrl);
-    } catch (e) {
-      console.error("Failed to extract color:", e);
-      dominantColor = "#1a1a1a"; // fallback
-    }
-
     // Parse tags - accept array or comma-separated string
     let tags: string[] = [];
     if (Array.isArray(data.tags)) {
@@ -115,7 +105,6 @@ export async function POST(request: Request) {
         imageUrl,
         description,
         tags: JSON.stringify(tags),
-        dominantColor,
       },
     });
 

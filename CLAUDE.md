@@ -54,8 +54,7 @@ src/
 │   └── related-moments.tsx   # Shows related moments by tags
 └── lib/
     ├── db.ts                 # Prisma client singleton
-    ├── moments.ts            # Data access layer for Moment model
-    └── color-extractor.ts    # Extract dominant colors from images
+    └── moments.ts            # Data access layer for Moment model
 
 prisma/
 ├── schema.prisma             # Database schema (single Moment model)
@@ -69,7 +68,6 @@ The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 - `slug` - URL-friendly identifier (unique)
 - `category` - One of: Branding, Images, Interfaces, Objects, Spaces, Typography
 - `tags` - JSON array stored as string (parsed in `src/lib/moments.ts`)
-- `dominantColor` - Hex color extracted from image (used for hover overlays)
 - `imageUrl` - Optional image (Unsplash or other remote URLs)
 - `creatorName/creatorUrl` - Attribution
 - `description` - Rich editorial description
@@ -80,9 +78,6 @@ The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 - `getAdjacentMoments(publishedAt)` - Get prev/next moments for navigation
 - `getRelatedMoments(currentId, tags, category, limit)` - Score moments by shared tags + same category
 - All functions parse the `tags` JSON string into array before returning
-
-**Color Extraction**
-`src/lib/color-extractor.ts` uses `sharp` to analyze images and extract dominant colors. This is used during seeding and powers the hover overlay effect on moment cards.
 
 **Routing & Filtering**
 - Home page (`/`) uses URL search params: `?category=Branding&q=search`

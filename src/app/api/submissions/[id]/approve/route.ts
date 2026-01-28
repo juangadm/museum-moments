@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { approveSubmission, getSubmissionById, SubmissionError } from "@/lib/submissions";
-import { extractDominantColor } from "@/lib/color-extractor";
 import { generateSlug } from "@/lib/utils";
 import { validateMomentInput, VALID_CATEGORIES } from "@/lib/validation";
 import { db } from "@/lib/db";
@@ -72,9 +71,6 @@ export async function POST(
       finalSlug = `${slug}-${slugCounter}`;
     }
 
-    // Extract dominant color from the submission's image
-    const dominantColor = await extractDominantColor(submission.imageUrl);
-
     // Process tags
     const processedTags = Array.isArray(tags)
       ? tags.filter((t): t is string => typeof t === "string")
@@ -89,7 +85,6 @@ export async function POST(
       category,
       description: description.trim(),
       tags: processedTags,
-      dominantColor,
     });
 
     return NextResponse.json({

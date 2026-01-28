@@ -1,5 +1,4 @@
 import { db } from "./db";
-import { extractDominantColor } from "./color-extractor";
 
 // Custom error class for data layer errors
 export class DataError extends Error {
@@ -237,10 +236,8 @@ export async function updateMoment(
     if (data.description !== undefined) updateData.description = data.description;
     if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags);
 
-    // If imageUrl changed, re-extract dominant color
-    if (data.imageUrl !== undefined && data.imageUrl !== existing.imageUrl) {
+    if (data.imageUrl !== undefined) {
       updateData.imageUrl = data.imageUrl;
-      updateData.dominantColor = await extractDominantColor(data.imageUrl);
     }
 
     const updated = await db.moment.update({

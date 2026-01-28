@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { extractDominantColor } from "../src/lib/color-extractor";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -167,18 +166,6 @@ Tip: Copy from Google Sheets or Notion table → paste into a .tsv file
       continue;
     }
 
-    // Extract dominant color if image provided
-    let dominantColor: string | null = null;
-    if (row.imageUrl) {
-      console.log(`🎨 Extracting color for "${row.title}"...`);
-      try {
-        dominantColor = await extractDominantColor(row.imageUrl);
-      } catch (e) {
-        console.warn(`   ⚠️  Color extraction failed, using fallback`);
-        dominantColor = "#1a1a1a";
-      }
-    }
-
     // Parse tags
     const tags = row.tags
       ? row.tags.split(",").map((t) => t.trim()).filter(Boolean)
@@ -195,7 +182,6 @@ Tip: Copy from Google Sheets or Notion table → paste into a .tsv file
         creatorUrl: row.creatorUrl || null,
         imageUrl: row.imageUrl || null,
         tags: JSON.stringify(tags),
-        dominantColor,
       },
     });
 
