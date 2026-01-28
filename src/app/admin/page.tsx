@@ -40,6 +40,7 @@ export default function AdminPage() {
   const [prefillUrl, setPrefillUrl] = useState("");
   const [isPrefilling, setIsPrefilling] = useState(false);
   const [prefillError, setPrefillError] = useState("");
+  const [extractedImages, setExtractedImages] = useState<string[]>([]);
 
   // Tag generation state
   const [isGeneratingTags, setIsGeneratingTags] = useState(false);
@@ -179,6 +180,7 @@ export default function AdminPage() {
     setSubmitError("");
     setPrefillUrl("");
     setPrefillError("");
+    setExtractedImages([]);
     setSuggestedTags([]);
   };
 
@@ -187,6 +189,7 @@ export default function AdminPage() {
 
     setIsPrefilling(true);
     setPrefillError("");
+    setExtractedImages([]);
 
     try {
       const response = await fetch("/api/scrape-url", {
@@ -208,18 +211,53 @@ export default function AdminPage() {
       if (data.title && !title) {
         setTitle(data.title);
       }
-      if (data.siteName && !creatorName) {
-        setCreatorName(data.siteName);
+      if (data.creator && !creatorName) {
+        setCreatorName(data.creator);
       }
       if (data.sourceUrl && !sourceUrl) {
         setSourceUrl(data.sourceUrl);
       }
-      // Note: We don't auto-fill description since user should write their own commentary
-      // But we could show the scraped description as a hint
+      // Auto-select category if suggested and valid
+      if (data.category && !category && isCategory(data.category)) {
+        setCategory(data.category);
+      }
+      // Store extracted images for selection
+      if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+        setExtractedImages(data.images);
+      }
     } catch (error) {
       setPrefillError(error instanceof Error ? error.message : "Failed to fetch URL");
     } finally {
       setIsPrefilling(false);
+    }
+  };
+
+  const handleSelectExtractedImage = async (imageUrl: string) => {
+    // Download the image and upload it to Vercel Blob
+    setIsUploading(true);
+    try {
+      // Fetch the image
+      const response = await fetch("/api/proxy-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+        body: JSON.stringify({ url: imageUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+
+      const data = await response.json();
+      setImageUrl(data.url);
+      setExtractedImages([]); // Clear extracted images after selection
+    } catch (error) {
+      console.error("Failed to use extracted image:", error);
+      alert("Failed to use this image. Please try uploading manually.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -565,31 +603,65 @@ export default function AdminPage() {
                 </button>
               </div>
             ) : (
-              <div
-                onDrop={handleDrop}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onClick={() => fileInputRef.current?.click()}
-                className={`
-                  border-2 border-dashed rounded-sm p-8 text-center cursor-pointer
-                  transition-colors
-                  ${isDragging ? "border-foreground bg-gray-50" : "border-border hover:border-foreground/50"}
-                  ${isUploading ? "opacity-50 pointer-events-none" : ""}
-                `}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                <p className="font-body text-[13px] text-foreground-muted">
-                  {isUploading ? "Uploading..." : "Drop image, GIF, or video here or click to upload"}
-                </p>
+              <div className="space-y-4">
+                {/* Extracted images from URL */}
+                {extractedImages.length > 0 && (
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-sm">
+                    <p className="font-display text-[10px] text-blue-700 mb-3">
+                      EXTRACTED IMAGES (click to use):
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {extractedImages.map((img, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => handleSelectExtractedImage(img)}
+                          disabled={isUploading}
+                          className="relative w-24 h-32 border-2 border-blue-300 hover:border-blue-500 rounded-sm overflow-hidden transition-colors disabled:opacity-50"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={img}
+                            alt={`Extracted ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // Hide broken images
+                              (e.target as HTMLImageElement).style.display = "none";
+                            }}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Drop zone for manual upload */}
+                <div
+                  onDrop={handleDrop}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragging(true);
+                  }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`
+                    border-2 border-dashed rounded-sm p-8 text-center cursor-pointer
+                    transition-colors
+                    ${isDragging ? "border-foreground bg-gray-50" : "border-border hover:border-foreground/50"}
+                    ${isUploading ? "opacity-50 pointer-events-none" : ""}
+                  `}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,video/mp4,video/webm,video/quicktime,video/x-m4v"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  <p className="font-body text-[13px] text-foreground-muted">
+                    {isUploading ? "Uploading..." : extractedImages.length > 0 ? "Or drop your own image here" : "Drop image, GIF, or video here or click to upload"}
+                  </p>
+                </div>
               </div>
             )}
           </div>
