@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     const clientIp = forwardedFor?.split(",")[0]?.trim() || "unknown";
 
     // Check rate limit
-    const rateLimitResult = checkRateLimit(clientIp);
+    const rateLimitResult = checkRateLimit(clientIp, "upload");
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         { error: rateLimitResult.reason || "Rate limit exceeded" },
