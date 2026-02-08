@@ -10,7 +10,7 @@ Museum Moments is a curated archive of design inspiration. It's a Next.js 16 app
 
 ### Core Commands
 - `npm run dev` - Start development server on port 3001
-- `npm run build` - Build for production (runs Prisma migrations first)
+- `npm run build` - Build for production (`prisma migrate deploy` then `next build`)
 - `npm start` - Start production server
 - `npm run lint` - Run ESLint
 
@@ -202,6 +202,28 @@ Storage limit: 1GB on free tier.
 - **Avoid `$` in env values**: Both Next.js and Vercel expand `$` as variable syntax. Use `!` or other characters instead.
 - **Local escaping**: If you must use `$` locally, escape with backslash: `ADMIN_PASSWORD=pass\$word`
 - **Vercel**: Set env vars before deploying. If added after, redeploy to pick them up.
+
+---
+
+## Deployment & Prisma Migrations
+
+### How Migrations Run in Production
+
+The build command is `prisma migrate deploy && next build`. This applies any pending Prisma migrations to the production database **before** building the Next.js app. This is critical — without it, new database tables/columns won't exist at runtime.
+
+### When Adding New Prisma Models or Fields
+
+1. Create the migration locally: `npm run db:migrate`
+2. Commit **both** the `schema.prisma` changes and the generated `prisma/migrations/` folder
+3. On next deploy, `prisma migrate deploy` automatically applies the migration
+
+**Do NOT** rely on `prisma generate` alone — it only creates TypeScript types. The actual database table is only created by `prisma migrate deploy`.
+
+### Common Pitfalls
+
+- **`prisma generate` vs `prisma migrate deploy`**: `generate` creates the TypeScript client (types compile, app builds). `migrate deploy` creates the actual tables in PostgreSQL. If you only have `generate`, the app builds fine but crashes at runtime with "table does not exist."
+- **`dotenv` must be in `dependencies` (not `devDependencies`)**: `prisma.config.ts` imports `dotenv/config`. Since `prisma migrate deploy` runs at build time, `dotenv` must be available as a production dependency.
+- **Honeypot field naming**: Never use recognizable field names like "website", "email", "url" for honeypot inputs — browsers and password managers will autofill them, silently triggering the spam filter on real users. Use obscure names that aren't in any autofill dictionary.
 
 ---
 
