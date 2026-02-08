@@ -441,7 +441,7 @@ export function SubmissionForm() {
         />
       </div>
 
-      {/* Honeypot - hidden from humans */}
+      {/* Honeypot - hidden from humans, uses obscure name to avoid browser autofill */}
       <div
         aria-hidden="true"
         style={{
@@ -451,13 +451,15 @@ export function SubmissionForm() {
           overflow: "hidden",
         }}
       >
-        <label htmlFor="website">Website</label>
+        <label htmlFor="preferred_fax_number">Fax</label>
         <input
           type="text"
-          id="website"
-          name="website"
+          id="preferred_fax_number"
+          name="preferred_fax_number"
           tabIndex={-1}
-          autoComplete="off"
+          autoComplete="nope"
+          data-lpignore="true"
+          data-1p-ignore
           value={honeypot}
           onChange={(e) => setHoneypot(e.target.value)}
         />

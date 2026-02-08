@@ -28,42 +28,40 @@ export function AdminAuthProvider({ children }: AdminAuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check localStorage for admin password (key matches admin page)
-    const storedPassword = localStorage.getItem("admin-password");
+    async function checkAuth() {
+      const storedPassword = localStorage.getItem("admin-password");
 
-    if (storedPassword) {
-      // Verify the password is still valid by making a test request
-      fetch("/api/moments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-password": storedPassword,
-        },
-        body: JSON.stringify({ test: true }),
-      })
-        .then((res) => {
-          if (res.status === 401) {
-            // Password is invalid, clear it
-            localStorage.removeItem("admin-password");
-            setIsAdmin(false);
-            setAdminPassword(null);
-          } else {
-            // Password is valid (even if request fails for other reasons)
-            setIsAdmin(true);
-            setAdminPassword(storedPassword);
-          }
-        })
-        .catch(() => {
-          // Network error, assume password is valid for offline scenarios
+      if (!storedPassword) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/moments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-password": storedPassword,
+          },
+          body: JSON.stringify({ test: true }),
+        });
+
+        if (res.status === 401) {
+          localStorage.removeItem("admin-password");
+        } else {
           setIsAdmin(true);
           setAdminPassword(storedPassword);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false);
+        }
+      } catch {
+        // Network error, assume password is valid for offline scenarios
+        setIsAdmin(true);
+        setAdminPassword(storedPassword);
+      } finally {
+        setIsLoading(false);
+      }
     }
+
+    checkAuth();
   }, []);
 
   return (

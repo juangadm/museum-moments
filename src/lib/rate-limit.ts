@@ -37,10 +37,12 @@ export type RateLimitResult = {
 /**
  * Check if an IP is allowed to submit.
  * Call this before processing a submission.
+ * Use the namespace parameter to separate rate limits for different endpoints.
  */
-export function checkRateLimit(ip: string): RateLimitResult {
+export function checkRateLimit(ip: string, namespace: string = "default"): RateLimitResult {
   const now = Date.now();
-  let record = store.get(ip);
+  const key = `${namespace}:${ip}`;
+  let record = store.get(key);
 
   // Initialize or reset expired records
   if (!record) {
@@ -68,7 +70,7 @@ export function checkRateLimit(ip: string): RateLimitResult {
 
   // Check limits
   if (record.hourCount >= HOURLY_LIMIT) {
-    store.set(ip, record);
+    store.set(key, record);
     return {
       allowed: false,
       remaining: { hour: 0, day: dayRemaining },
@@ -81,7 +83,7 @@ export function checkRateLimit(ip: string): RateLimitResult {
   }
 
   if (record.dayCount >= DAILY_LIMIT) {
-    store.set(ip, record);
+    store.set(key, record);
     return {
       allowed: false,
       remaining: { hour: hourRemaining, day: 0 },
@@ -96,7 +98,7 @@ export function checkRateLimit(ip: string): RateLimitResult {
   // Allowed - increment counters
   record.hourCount++;
   record.dayCount++;
-  store.set(ip, record);
+  store.set(key, record);
 
   return {
     allowed: true,
@@ -115,9 +117,10 @@ export function checkRateLimit(ip: string): RateLimitResult {
  * Get rate limit status without incrementing counters.
  * Useful for checking before starting a submission process.
  */
-export function getRateLimitStatus(ip: string): Omit<RateLimitResult, "reason"> & { allowed: boolean } {
+export function getRateLimitStatus(ip: string, namespace: string = "default"): Omit<RateLimitResult, "reason"> & { allowed: boolean } {
   const now = Date.now();
-  const record = store.get(ip);
+  const key = `${namespace}:${ip}`;
+  const record = store.get(key);
 
   if (!record) {
     return {
@@ -147,6 +150,6 @@ export function getRateLimitStatus(ip: string): Omit<RateLimitResult, "reason"> 
 /**
  * Clear rate limit for an IP (for testing/admin purposes)
  */
-export function clearRateLimit(ip: string): void {
-  store.delete(ip);
+export function clearRateLimit(ip: string, namespace: string = "default"): void {
+  store.delete(`${namespace}:${ip}`);
 }
