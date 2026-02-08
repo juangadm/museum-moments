@@ -27,8 +27,8 @@ export async function POST(request: Request) {
 
     // Check honeypot - if filled, silently reject (don't tell bots they failed)
     if (body.honeypot && body.honeypot.trim().length > 0) {
-      // Pretend success to bots
-      return NextResponse.json({ success: true, id: "fake-id" });
+      // Return a response indistinguishable from real success
+      return NextResponse.json({ success: true, id: crypto.randomUUID() });
     }
 
     // Validate input
