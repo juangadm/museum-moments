@@ -60,7 +60,7 @@ export async function POST(
     }
 
     // Generate slug from title
-    let slug = generateSlug(title);
+    const slug = generateSlug(title);
 
     // Ensure slug is unique
     let slugCounter = 0;
