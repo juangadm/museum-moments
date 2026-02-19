@@ -6,7 +6,7 @@ import { CATEGORIES } from "@/lib/constants";
 
 const FILTER_OPTIONS = ["All", ...CATEGORIES];
 
-export function CategoryFilter({ count }: { count: number }) {
+export function CategoryFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category") || "All";
@@ -101,12 +101,6 @@ export function CategoryFilter({ count }: { count: number }) {
             );
           })}
 
-          {/* Count display */}
-          <li className="flex items-center">
-            <span className="font-display text-[12px] uppercase tracking-[0px] whitespace-nowrap text-foreground/70 px-[2px] py-[1px]">
-              ( {count} )
-            </span>
-          </li>
       </ul>
     </div>
   );
