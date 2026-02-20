@@ -64,6 +64,8 @@ export async function POST(request: Request) {
     const creatorName = (data.creatorName as string) || null;
     const creatorUrl = (data.creatorUrl as string) || null;
     const sourceUrl = (data.sourceUrl as string) || "";
+    const year = data.year !== undefined && data.year !== null ? Number(data.year) : null;
+    const yearApproximate = data.yearApproximate === true;
 
     // Generate slug from title if not provided
     const slug = (data.slug as string) || generateSlug(title);
@@ -116,6 +118,8 @@ export async function POST(request: Request) {
         description,
         tags: JSON.stringify(tags),
         dominantColor,
+        year,
+        yearApproximate,
       },
     });
 
