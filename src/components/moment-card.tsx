@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Moment } from "@/lib/moments";
+import { formatYear } from "@/lib/utils";
 import { MediaDisplay } from "./media-display";
 
 type MomentCardProps = {
@@ -7,7 +8,7 @@ type MomentCardProps = {
 };
 
 export function MomentCard({ moment }: MomentCardProps) {
-  const year = moment.publishedAt.getFullYear();
+  const yearDisplay = formatYear(moment.year, moment.yearApproximate);
 
   return (
     <Link href={`/m/${moment.slug}`} className="block break-inside-avoid mb-3 group">
@@ -29,7 +30,7 @@ export function MomentCard({ moment }: MomentCardProps) {
         {/* Museum caption */}
         <div className="mt-1.5 text-left">
           <div className="font-body text-[11px] leading-[13.2px] text-foreground">
-            <div className="group-hover:italic">{moment.title}, {year}</div>
+            <div className="group-hover:italic">{moment.title}{yearDisplay ? `, ${yearDisplay}` : ""}</div>
             {moment.creatorName && <div>{moment.creatorName}</div>}
             <div>{moment.category}</div>
           </div>
