@@ -7,6 +7,7 @@ import {
   getAdjacentMoments,
   getRelatedMoments,
 } from "@/lib/moments";
+import { formatYear } from "@/lib/utils";
 import { MomentNavigation } from "@/components/moment-navigation";
 import { RelatedMoments } from "@/components/related-moments";
 import { ShareButton } from "@/components/share-button";
@@ -76,6 +77,12 @@ export default async function MomentPage({ params }: Props) {
             >
               {moment.category}
             </Link>
+            {formatYear(moment.year, moment.yearApproximate) && (
+              <>
+                <span className="text-neutral-500"> • </span>
+                <span className="text-neutral-500">{formatYear(moment.year, moment.yearApproximate)}</span>
+              </>
+            )}
             {moment.creatorName && (
               <>
                 <span className="text-neutral-500"> • </span>
