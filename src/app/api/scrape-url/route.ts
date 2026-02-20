@@ -147,7 +147,7 @@ Return ONLY valid JSON in this exact format (no markdown, no explanation):
       title: extracted.title || null,
       creator: extracted.creator || null,
       year: extracted.year ? parseInt(String(extracted.year), 10) || null : null,
-      yearApproximate: extracted.yearApproximate === true,
+      yearApproximate: extracted.yearApproximate === true || extracted.yearApproximate === "true",
       category: extracted.category || null,
       images,
       sourceUrl: url,
