@@ -42,7 +42,7 @@ export async function POST(
     }
 
     // Validate required fields for moment creation
-    const { title, category, description, tags } = body;
+    const { title, category, description, tags, year, yearApproximate } = body;
 
     if (!title || typeof title !== "string" || title.trim().length === 0) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -83,6 +83,8 @@ export async function POST(
         : [];
 
     // Approve the submission and create the moment
+    const parsedYear = year !== undefined && year !== null ? Number(year) : null;
+
     const result = await approveSubmission(id, {
       slug: finalSlug,
       title: title.trim(),
@@ -90,6 +92,8 @@ export async function POST(
       description: description.trim(),
       tags: processedTags,
       dominantColor,
+      year: parsedYear,
+      yearApproximate: yearApproximate === true,
     });
 
     return NextResponse.json({

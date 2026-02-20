@@ -34,6 +34,8 @@ export default function AdminSubmissionsPage() {
   const [reviewCategory, setReviewCategory] = useState("");
   const [reviewDescription, setReviewDescription] = useState("");
   const [reviewTags, setReviewTags] = useState("");
+  const [reviewYear, setReviewYear] = useState("");
+  const [reviewYearApproximate, setReviewYearApproximate] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const [reviewError, setReviewError] = useState("");
@@ -120,6 +122,8 @@ export default function AdminSubmissionsPage() {
     setReviewDescription(submission.description || "");
     setReviewCategory("");
     setReviewTags("");
+    setReviewYear("");
+    setReviewYearApproximate(false);
     setReviewError("");
   };
 
@@ -129,6 +133,8 @@ export default function AdminSubmissionsPage() {
     setReviewCategory("");
     setReviewDescription("");
     setReviewTags("");
+    setReviewYear("");
+    setReviewYearApproximate(false);
     setReviewError("");
   };
 
@@ -163,6 +169,8 @@ export default function AdminSubmissionsPage() {
           category: reviewCategory,
           description: reviewDescription.trim(),
           tags: reviewTags.trim(),
+          year: reviewYear ? parseInt(reviewYear, 10) : null,
+          yearApproximate: reviewYearApproximate,
         }),
       });
 
@@ -448,6 +456,33 @@ export default function AdminSubmissionsPage() {
                       onChange={(e) => setReviewTitle(e.target.value)}
                       className="w-full px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
                     />
+                  </div>
+
+                  <div>
+                    <label htmlFor="review-year" className="block font-display text-[11px] text-foreground-muted mb-2">
+                      Year Created
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <input
+                        id="review-year"
+                        type="number"
+                        value={reviewYear}
+                        onChange={(e) => setReviewYear(e.target.value)}
+                        className="w-32 px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
+                        placeholder="2024"
+                        min="1000"
+                        max={new Date().getFullYear() + 1}
+                      />
+                      <label className="flex items-center gap-2 font-body text-[13px] text-foreground-muted cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={reviewYearApproximate}
+                          onChange={(e) => setReviewYearApproximate(e.target.checked)}
+                          className="rounded-sm"
+                        />
+                        Approximate (decade)
+                      </label>
+                    </div>
                   </div>
 
                   <div>
