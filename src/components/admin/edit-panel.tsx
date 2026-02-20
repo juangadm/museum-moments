@@ -31,6 +31,8 @@ export function EditPanel({
   const [description, setDescription] = useState(moment.description);
   const [tags, setTags] = useState<string[]>(moment.tags);
   const [tagInput, setTagInput] = useState("");
+  const [year, setYear] = useState(moment.year !== null ? String(moment.year) : "");
+  const [yearApproximate, setYearApproximate] = useState(moment.yearApproximate);
 
   // Upload state
   const [isUploading, setIsUploading] = useState(false);
@@ -59,6 +61,8 @@ export function EditPanel({
       setDescription(moment.description);
       setTags(moment.tags);
       setTagInput("");
+      setYear(moment.year !== null ? String(moment.year) : "");
+      setYearApproximate(moment.yearApproximate);
       setSubmitError("");
       setSubmitSuccess(false);
 
@@ -213,6 +217,8 @@ export function EditPanel({
           imageUrl,
           description,
           tags,
+          year: year ? parseInt(year, 10) : null,
+          yearApproximate,
         }),
       });
 
@@ -402,6 +408,34 @@ export function EditPanel({
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
             />
+          </div>
+
+          {/* Year */}
+          <div>
+            <label htmlFor="edit-year" className="block font-display text-[11px] text-foreground-muted mb-2">
+              Year Created
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                id="edit-year"
+                type="number"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="w-32 px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
+                placeholder="2024"
+                min="1000"
+                max={new Date().getFullYear() + 1}
+              />
+              <label className="flex items-center gap-2 font-body text-[13px] text-foreground-muted cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={yearApproximate}
+                  onChange={(e) => setYearApproximate(e.target.checked)}
+                  className="rounded-sm"
+                />
+                Approximate (decade)
+              </label>
+            </div>
           </div>
 
           {/* Category */}

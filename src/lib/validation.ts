@@ -116,6 +116,14 @@ export function validateMomentInput(data: Record<string, unknown>): ValidationRe
     }
   }
 
+  // Year validation (optional)
+  if (data.year !== undefined && data.year !== null) {
+    const year = Number(data.year);
+    if (!Number.isInteger(year) || year < 1000 || year > new Date().getFullYear() + 1) {
+      return { valid: false, error: "Year must be an integer between 1000 and next year" };
+    }
+  }
+
   return { valid: true };
 }
 
@@ -161,7 +169,7 @@ export function validateMomentUpdate(data: Record<string, unknown>): ValidationR
   }
 
   // Check if at least one field is being updated
-  const updateableFields = ["title", "category", "description", "imageUrl", "creatorName", "creatorUrl", "sourceUrl", "tags"];
+  const updateableFields = ["title", "category", "description", "imageUrl", "creatorName", "creatorUrl", "sourceUrl", "tags", "year", "yearApproximate"];
   const hasUpdate = updateableFields.some(field => field in data);
   if (!hasUpdate) {
     return { valid: false, error: "No fields to update" };
@@ -240,6 +248,14 @@ export function validateMomentUpdate(data: Record<string, unknown>): ValidationR
       if (typeof tag !== "string" || tag.length > MAX_TAG_LENGTH) {
         return { valid: false, error: `Each tag must be under ${MAX_TAG_LENGTH} characters` };
       }
+    }
+  }
+
+  // Validate year if provided
+  if (data.year !== undefined && data.year !== null) {
+    const year = Number(data.year);
+    if (!Number.isInteger(year) || year < 1000 || year > new Date().getFullYear() + 1) {
+      return { valid: false, error: "Year must be an integer between 1000 and next year" };
     }
   }
 

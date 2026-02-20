@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Moment } from "@/lib/moments";
+import { formatYear } from "@/lib/utils";
 import { MediaDisplay } from "./media-display";
 
 type Props = {
@@ -15,7 +16,7 @@ export function RelatedMoments({ moments }: Props) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {moments.map((moment) => {
-            const year = moment.publishedAt.getFullYear();
+            const yearDisplay = formatYear(moment.year, moment.yearApproximate);
 
             return (
               <Link
@@ -41,7 +42,7 @@ export function RelatedMoments({ moments }: Props) {
                   {/* Museum caption */}
                   <div className="mt-1.5 text-left">
                     <div className="font-body text-[11px] leading-[13.2px] text-foreground">
-                      <div className="group-hover:italic">{moment.title}, {year}</div>
+                      <div className="group-hover:italic">{moment.title}{yearDisplay ? `, ${yearDisplay}` : ""}</div>
                       {moment.creatorName && <div>{moment.creatorName}</div>}
                       <div>{moment.category}</div>
                     </div>

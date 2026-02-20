@@ -84,12 +84,15 @@ Extract the following information:
    - "Designed by" or "Created by" text
    - Do NOT use the website domain as the creator unless it's actually the creator's name
 
-3. **year**: The year the work was created (if mentioned)
+3. **year**: The year the work was created (if mentioned). Return just the number.
+   - If only a decade is mentioned (e.g., "1990s"), return the decade start year (e.g., 1990)
 
-4. **category**: Suggest ONE category from this list:
+4. **yearApproximate**: true if the year is approximate/decade-level, false if exact
+
+5. **category**: Suggest ONE category from this list:
 ${categoryList}
 
-5. **images**: Extract up to 5 main images from the page that could represent this work. Look for:
+6. **images**: Extract up to 5 main images from the page that could represent this work. Look for:
    - Main hero/featured images
    - Gallery images
    - Images in the main content area
@@ -100,7 +103,8 @@ Return ONLY valid JSON in this exact format (no markdown, no explanation):
 {
   "title": "string or null",
   "creator": "string or null",
-  "year": "string or null",
+  "year": "number or null",
+  "yearApproximate": "boolean",
   "category": "string or null",
   "images": ["url1", "url2"]
 }`,
@@ -142,7 +146,8 @@ Return ONLY valid JSON in this exact format (no markdown, no explanation):
     return NextResponse.json({
       title: extracted.title || null,
       creator: extracted.creator || null,
-      year: extracted.year || null,
+      year: extracted.year ? parseInt(String(extracted.year), 10) || null : null,
+      yearApproximate: extracted.yearApproximate === true || extracted.yearApproximate === "true",
       category: extracted.category || null,
       images,
       sourceUrl: url,

@@ -26,6 +26,10 @@ model Moment {
   ogTitle    String?
   ogSiteName String?
 
+  // Year the work was created (not when added to site)
+  year            Int?
+  yearApproximate Boolean @default(false)
+
   // Extracted from image for hover overlay
   dominantColor String?
 

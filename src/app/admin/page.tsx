@@ -15,6 +15,8 @@ export default function AdminPage() {
 
   // Form state
   const [title, setTitle] = useState("");
+  const [year, setYear] = useState("");
+  const [yearApproximate, setYearApproximate] = useState(false);
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
   const [category, setCategory] = useState<string>("");
@@ -166,6 +168,8 @@ export default function AdminPage() {
 
   const resetForm = () => {
     setTitle("");
+    setYear("");
+    setYearApproximate(false);
     setSlug("");
     setSlugEdited(false);
     setCategory("");
@@ -220,6 +224,12 @@ export default function AdminPage() {
       // Auto-select category if suggested and valid
       if (data.category && !category && isCategory(data.category)) {
         setCategory(data.category);
+      }
+      if (data.year && !year) {
+        setYear(String(data.year));
+      }
+      if (data.yearApproximate !== undefined) {
+        setYearApproximate(data.yearApproximate);
       }
       // Store extracted images for selection
       if (data.images && Array.isArray(data.images) && data.images.length > 0) {
@@ -330,6 +340,8 @@ export default function AdminPage() {
           imageUrl,
           description,
           tags,
+          year: year ? parseInt(year, 10) : null,
+          yearApproximate,
         }),
       });
 
@@ -504,6 +516,33 @@ export default function AdminPage() {
               className="w-full px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
               placeholder="linear-2024-release-page"
             />
+          </div>
+
+          {/* Year */}
+          <div>
+            <label className="block font-display text-[11px] text-foreground-muted mb-2">
+              Year Created
+            </label>
+            <div className="flex items-center gap-4">
+              <input
+                type="number"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                className="w-32 px-4 py-3 font-body text-[13px] border border-border rounded-sm focus:outline-none focus:border-foreground bg-white"
+                placeholder="2024"
+                min="1000"
+                max={new Date().getFullYear() + 1}
+              />
+              <label className="flex items-center gap-2 font-body text-[13px] text-foreground-muted cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={yearApproximate}
+                  onChange={(e) => setYearApproximate(e.target.checked)}
+                  className="rounded-sm"
+                />
+                Approximate (decade)
+              </label>
+            </div>
           </div>
 
           {/* Category */}

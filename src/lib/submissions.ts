@@ -126,6 +126,8 @@ export async function approveSubmission(
     description: string;
     tags: string[];
     dominantColor: string;
+    year?: number | null;
+    yearApproximate?: boolean;
   }
 ): Promise<{ submission: Submission; momentId: string }> {
   try {
@@ -152,6 +154,8 @@ export async function approveSubmission(
           description: momentData.description,
           tags: JSON.stringify(momentData.tags),
           dominantColor: momentData.dominantColor,
+          year: momentData.year ?? null,
+          yearApproximate: momentData.yearApproximate ?? false,
           imageUrl: submission.imageUrl,
           sourceUrl: submission.sourceUrl,
           creatorName: submission.creatorName,

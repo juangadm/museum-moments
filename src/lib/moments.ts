@@ -36,6 +36,8 @@ export type Moment = {
   tags: string[];
   publishedAt: Date;
   dominantColor: string | null;
+  year: number | null;
+  yearApproximate: boolean;
 };
 
 export type MomentNav = {
@@ -60,6 +62,8 @@ function parseMoment(m: {
   ogTitle: string | null;
   ogSiteName: string | null;
   dominantColor: string | null;
+  year: number | null;
+  yearApproximate: boolean;
 }): Moment {
   return {
     id: m.id,
@@ -74,6 +78,8 @@ function parseMoment(m: {
     tags: safeParseTagsArray(m.tags),
     publishedAt: m.publishedAt,
     dominantColor: m.dominantColor,
+    year: m.year,
+    yearApproximate: m.yearApproximate,
   };
 }
 
@@ -210,6 +216,8 @@ export type MomentUpdate = {
   imageUrl?: string;
   description?: string;
   tags?: string[];
+  year?: number | null;
+  yearApproximate?: boolean;
 };
 
 export async function updateMoment(
@@ -236,6 +244,8 @@ export async function updateMoment(
     if (data.sourceUrl !== undefined) updateData.sourceUrl = data.sourceUrl;
     if (data.description !== undefined) updateData.description = data.description;
     if (data.tags !== undefined) updateData.tags = JSON.stringify(data.tags);
+    if (data.year !== undefined) updateData.year = data.year;
+    if (data.yearApproximate !== undefined) updateData.yearApproximate = data.yearApproximate;
 
     // If imageUrl changed, re-extract dominant color
     if (data.imageUrl !== undefined && data.imageUrl !== existing.imageUrl) {
