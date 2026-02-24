@@ -1,3 +1,10 @@
+// Site URL for SEO files (sitemap, robots, OG images)
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://museum-moments.com");
+
 // Single source of truth for categories across the application
 
 export const CATEGORIES = [
