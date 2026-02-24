@@ -107,7 +107,7 @@ export function Header() {
               >
                 <span className="underline decoration-1 underline-offset-4">curated</span>
               </button>{" "}
-              to stop the slop and build the beautiful
+              to build the beautiful in the age of AI
             </p>
           </div>
 
