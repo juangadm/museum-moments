@@ -30,8 +30,7 @@ export function ShareButton({ title }: Props) {
     <button
       type="button"
       onClick={handleShare}
-      className="font-display text-xs px-3 py-2 border border-foreground text-foreground hover:bg-[#a0a0a0] hover:border-[#a0a0a0] active:opacity-70 transition-colors focus-ring"
-      style={{ borderRadius: '0' }}
+      className="font-body text-sm text-foreground-muted hover:text-foreground active:opacity-70 transition-colors focus-ring"
     >
       {copied ? "Copied!" : "Share"}
     </button>
