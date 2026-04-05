@@ -10,7 +10,7 @@ import {
 import { formatYear } from "@/lib/utils";
 import { MomentNavigation } from "@/components/moment-navigation";
 import { RelatedMoments } from "@/components/related-moments";
-import { ShareButton } from "@/components/share-button";
+import { PostcardModal } from "@/components/postcard-modal";
 import { MomentEditWrapper } from "@/components/admin/moment-edit-wrapper";
 
 type Props = {
@@ -80,7 +80,8 @@ export default async function MomentPage({ params }: Props) {
                   alt={moment.title}
                   width={1200}
                   height={800}
-                  className="w-full h-auto"
+                  className="w-full h-auto object-contain"
+                  style={{ maxHeight: "calc(100vh - 160px)" }}
                   priority
                 />
               </a>
@@ -155,10 +156,17 @@ export default async function MomentPage({ params }: Props) {
               </p>
             )}
 
-            {/* Share — subtle text action */}
-            <div className="mt-6">
-              <ShareButton title={moment.title} />
-            </div>
+            {/* Send as postcard */}
+            {moment.imageUrl && (
+              <div className="mt-6">
+                <PostcardModal
+                  imageUrl={moment.imageUrl}
+                  title={moment.title}
+                  creator={moment.creatorName ?? undefined}
+                  year={yearDisplay ?? undefined}
+                />
+              </div>
+            )}
           </div>
         </div>
 
