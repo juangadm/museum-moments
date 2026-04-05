@@ -9,13 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin", "/api/"],
       },
-      // Explicitly allow AI search bots for citation
-      { userAgent: "GPTBot", allow: "/" },
-      { userAgent: "ChatGPT-User", allow: "/" },
-      { userAgent: "PerplexityBot", allow: "/" },
-      { userAgent: "ClaudeBot", allow: "/" },
-      { userAgent: "anthropic-ai", allow: "/" },
-      { userAgent: "Google-Extended", allow: "/" },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
