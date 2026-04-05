@@ -13,6 +13,7 @@ type MediaDisplayProps = {
   priority?: boolean;
   className?: string;
   videoClassName?: string;
+  style?: React.CSSProperties;
 };
 
 export function MediaDisplay({
@@ -25,6 +26,7 @@ export function MediaDisplay({
   priority,
   className = "",
   videoClassName,
+  style,
 }: MediaDisplayProps) {
   if (isVideoUrl(src)) {
     return (
@@ -50,6 +52,7 @@ export function MediaDisplay({
       sizes={sizes}
       priority={priority}
       className={className}
+      style={style}
       unoptimized={isGifUrl(src)}
     />
   );
