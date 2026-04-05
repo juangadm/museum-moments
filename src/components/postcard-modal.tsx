@@ -135,20 +135,21 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
 
           {/* Postcard */}
           <div
-            className="bg-white w-[90vw] max-w-[780px]"
+            className="bg-white"
             style={{
-              boxShadow: "0 2px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)",
+              boxShadow: "0 4px 30px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.03)",
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              maxHeight: "80vh",
+              width: "min(90vw, 920px)",
+              height: "min(75vh, 560px)",
             }}
           >
             {/* Left side — artwork */}
             <div
-              className="flex flex-col items-center justify-center p-6 overflow-hidden"
+              className="flex flex-col items-center p-8 overflow-hidden"
               style={{ borderRight: "1px solid #d4d4d4" }}
             >
-              <div className="relative w-full flex-1 min-h-0 flex items-center justify-center">
+              <div className="flex-1 min-h-0 w-full flex items-center justify-center">
                 <Image
                   src={imageUrl}
                   alt={title}
@@ -158,17 +159,17 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                   style={{ maxHeight: "100%", maxWidth: "100%", border: "1px solid #e5e5e5" }}
                 />
               </div>
-              <div className="mt-3 text-center flex-shrink-0">
+              <div className="mt-4 text-center flex-shrink-0">
                 <p
                   className="font-body text-foreground"
-                  style={{ fontSize: "13px", lineHeight: "18px" }}
+                  style={{ fontSize: "14px", lineHeight: "20px" }}
                 >
                   {title}
                 </p>
                 {caption && (
                   <p
                     className="font-body text-foreground-muted"
-                    style={{ fontSize: "12px", lineHeight: "16px", marginTop: "2px" }}
+                    style={{ fontSize: "13px", lineHeight: "18px", marginTop: "3px" }}
                   >
                     {caption}
                   </p>
@@ -177,16 +178,16 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
             </div>
 
             {/* Right side — postcard form */}
-            <div className="flex flex-col p-6">
+            <div className="flex flex-col p-8">
               {/* Header row: POSTCARD + stamp */}
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start justify-between mb-8">
                 <h3
                   className="font-display"
                   style={{
-                    fontSize: "14px",
+                    fontSize: "15px",
                     letterSpacing: "0.35em",
                     fontWeight: 500,
-                    marginTop: "8px",
+                    marginTop: "10px",
                   }}
                 >
                   POSTCARD
@@ -195,11 +196,11 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
               </div>
 
               {/* Form fields */}
-              <div className="flex flex-col gap-5 flex-1">
-                <div>
+              <div className="flex flex-col flex-1">
+                <div className="mb-6">
                   <label
-                    className="font-body text-foreground-muted block mb-1"
-                    style={{ fontSize: "12px" }}
+                    className="font-body text-foreground-muted block"
+                    style={{ fontSize: "13px", marginBottom: "8px" }}
                   >
                     To:
                   </label>
@@ -209,17 +210,17 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                     onChange={(e) => setToValue(e.target.value)}
                     className="w-full bg-transparent font-body text-foreground outline-none"
                     style={{
-                      fontSize: "13px",
+                      fontSize: "14px",
                       borderBottom: "1px solid #d4d4d4",
-                      paddingBottom: "6px",
+                      paddingBottom: "8px",
                     }}
                   />
                 </div>
 
-                <div>
+                <div className="mb-6">
                   <label
-                    className="font-body text-foreground-muted block mb-1"
-                    style={{ fontSize: "12px" }}
+                    className="font-body text-foreground-muted block"
+                    style={{ fontSize: "13px", marginBottom: "8px" }}
                   >
                     From:
                   </label>
@@ -229,29 +230,30 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                     onChange={(e) => setFromValue(e.target.value)}
                     className="w-full bg-transparent font-body text-foreground outline-none"
                     style={{
-                      fontSize: "13px",
+                      fontSize: "14px",
                       borderBottom: "1px solid #d4d4d4",
-                      paddingBottom: "6px",
+                      paddingBottom: "8px",
                     }}
                   />
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 min-h-0">
                   <label
-                    className="font-body text-foreground-muted block mb-1"
-                    style={{ fontSize: "12px" }}
+                    className="font-body text-foreground-muted block"
+                    style={{ fontSize: "13px", marginBottom: "8px" }}
                   >
                     Message:
                   </label>
                   <textarea
                     value={messageValue}
                     onChange={(e) => setMessageValue(e.target.value)}
-                    className="w-full h-full bg-transparent font-body text-foreground outline-none resize-none"
+                    className="w-full bg-transparent font-body text-foreground outline-none resize-none"
                     style={{
-                      fontSize: "13px",
+                      fontSize: "14px",
+                      height: "100%",
                       backgroundImage:
-                        "repeating-linear-gradient(transparent, transparent 25px, #d4d4d4 25px, #d4d4d4 26px)",
-                      lineHeight: "26px",
+                        "repeating-linear-gradient(transparent, transparent 27px, #d4d4d4 27px, #d4d4d4 28px)",
+                      lineHeight: "28px",
                     }}
                   />
                 </div>
