@@ -57,134 +57,110 @@ export default async function MomentPage({ params }: Props) {
     getRelatedMoments(moment.id, moment.tags, moment.category),
   ]);
 
+  const yearDisplay = formatYear(moment.year, moment.yearApproximate);
+
   return (
     <MomentEditWrapper moment={moment}>
       <MomentNavigation prev={prev} next={next} />
 
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        {/* Title and Meta - stacked on mobile, row on desktop */}
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8 mb-6">
-          {/* Title */}
-          <h1 className="font-display font-semibold leading-tight" style={{ textTransform: 'uppercase', fontSize: '18px' }}>
-            {moment.title}
-          </h1>
+      <article className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        {/* Side-by-side: image left, metadata right */}
+        <div className="flex flex-col md:flex-row md:gap-12 lg:gap-16">
+          {/* Image */}
+          {moment.imageUrl && (
+            <div className="md:w-[58%] md:flex-shrink-0 mb-8 md:mb-0">
+              <a
+                href={moment.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <MediaDisplay
+                  src={moment.imageUrl}
+                  alt={moment.title}
+                  width={1200}
+                  height={800}
+                  className="w-full h-auto"
+                  priority
+                />
+              </a>
+            </div>
+          )}
 
-          {/* Meta row - Category • Creator */}
-          <div className="text-sm sm:whitespace-nowrap sm:flex-shrink-0">
-            <Link
-              href={`/?category=${encodeURIComponent(moment.category)}`}
-              className="text-neutral-500 hover:text-black active:opacity-70 transition-colors focus-ring"
+          {/* Wall label */}
+          <div className="flex-1 flex flex-col">
+            {/* Title */}
+            <h1
+              className="font-display font-semibold leading-tight"
+              style={{ fontSize: '18px' }}
             >
-              {moment.category}
-            </Link>
-            {formatYear(moment.year, moment.yearApproximate) && (
-              <>
-                <span className="text-neutral-500"> • </span>
-                <span className="text-neutral-500">{formatYear(moment.year, moment.yearApproximate)}</span>
-              </>
-            )}
-            {moment.creatorName && (
-              <>
-                <span className="text-neutral-500"> • </span>
-                {moment.creatorUrl ? (
-                  <a
-                    href={moment.creatorUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-neutral-500 hover:text-black active:opacity-70 transition-colors focus-ring"
-                  >
-                    {moment.creatorName} ↗
-                  </a>
-                ) : (
-                  <span className="text-neutral-500">{moment.creatorName}</span>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+              {moment.title}
+            </h1>
 
-        {/* Hero image/video */}
-        {moment.imageUrl && (
-          <div className="mb-8">
+            {/* Creator */}
+            {moment.creatorName && (
+              <p className="font-body text-sm text-foreground mt-1.5">
+                {moment.creatorName}
+              </p>
+            )}
+
+            {/* Year */}
+            {yearDisplay && (
+              <p className="font-body text-sm text-foreground-muted mt-0.5">
+                {yearDisplay}
+              </p>
+            )}
+
+            {/* Description */}
+            <div className="mt-6">
+              <p
+                className="font-body text-foreground"
+                style={{ fontSize: '13px', lineHeight: '20px' }}
+              >
+                {moment.description}
+              </p>
+              <p
+                className="font-body text-foreground-muted italic mt-3"
+                style={{ fontSize: '12px' }}
+              >
+                — Juan Gabriel Delgado
+              </p>
+            </div>
+
+            {/* View at source */}
             <a
               href={moment.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block"
+              className="font-body text-sm text-foreground-muted hover:text-foreground transition-colors mt-6 inline-block"
             >
-              <MediaDisplay
-                src={moment.imageUrl}
-                alt={moment.title}
-                width={1200}
-                height={800}
-                className="w-full h-auto"
-                priority
-              />
+              View at source ↗
             </a>
-          </div>
-        )}
 
-        {/* Curator commentary */}
-        <div className="max-w-2xl mb-6">
-          <h2
-            className="font-display font-semibold"
-            style={{
-              textTransform: 'uppercase',
-              fontSize: '12px',
-              lineHeight: '14.4px',
-              color: '#000000',
-              margin: '0'
-            }}
-          >
-            Curatorial Statement
-          </h2>
-          <div
-            className="font-body text-foreground"
-            style={{
-              marginTop: '6px',
-              fontSize: '12px',
-              lineHeight: '14.4px'
-            }}
-          >
-            <p style={{ margin: '0' }}>{moment.description}</p>
-            <p
-              className="text-foreground-muted italic"
-              style={{ marginTop: '12px', margin: '12px 0 0 0' }}
+            {/* Category */}
+            <Link
+              href={`/?category=${encodeURIComponent(moment.category)}`}
+              className="font-body text-sm text-foreground-muted hover:text-foreground transition-colors mt-4"
             >
-              — Juan Gabriel Delgado
-            </p>
-          </div>
-        </div>
+              {moment.category}
+            </Link>
 
-        {/* Actions */}
-        <div className="flex items-center gap-3 mb-6">
-          <ShareButton title={moment.title} />
-          <a
-            href={moment.sourceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-display text-xs inline-flex items-center gap-2 px-3 py-2 border border-foreground bg-foreground hover:bg-[#a0a0a0] hover:border-[#a0a0a0] transition-colors"
-            style={{ borderRadius: '0', color: '#ffffff' }}
-          >
-            Visit Original
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </div>
-
-        {/* Tags */}
-        {moment.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {moment.tags.map((tag) => (
-              <span
-                key={tag}
-                className="font-display text-[10px] px-2 py-1 border border-border text-foreground-muted hover:border-foreground hover:text-foreground active:bg-foreground/5 transition-colors cursor-pointer"
-                style={{ borderRadius: '0' }}
+            {/* Tags — quiet, comma-separated */}
+            {moment.tags.length > 0 && (
+              <p
+                className="font-body text-foreground-muted mt-1"
+                style={{ fontSize: '12px' }}
               >
-                {tag}
-              </span>
-            ))}
+                {moment.tags.join(", ")}
+              </p>
+            )}
+
+            {/* Share — subtle text action */}
+            <div className="mt-6">
+              <ShareButton title={moment.title} />
+            </div>
           </div>
-        )}
+        </div>
 
         {/* Prev/Next navigation */}
         <nav className="mt-16">
