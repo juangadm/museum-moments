@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Azeret_Mono, Lora, Gupter } from "next/font/google";
+import localFont from "next/font/local";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { AdminAuthProvider } from "@/components/admin/admin-auth-provider";
@@ -27,6 +28,12 @@ const gupter = Gupter({
   variable: "--font-gupter",
   subsets: ["latin"],
   display: "swap",
+});
+
+// Biro Script Reduced for handwritten postcard text
+const biroScript = localFont({
+  src: "./fonts/Biro_Script_reduced.otf",
+  variable: "--font-biro-script",
 });
 
 export const metadata: Metadata = {
@@ -122,7 +129,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${azeretMono.variable} ${liter.variable} ${gupter.variable} antialiased`}>
+      <body className={`${azeretMono.variable} ${liter.variable} ${gupter.variable} ${biroScript.variable} antialiased`}>
         <AdminAuthProvider>
           <div className="min-h-screen flex flex-col" style={{ paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
             <Header />
