@@ -162,6 +162,7 @@ export default async function MomentPage({ params }: Props) {
                 <PostcardModal
                   imageUrl={moment.imageUrl}
                   title={moment.title}
+                  slug={moment.slug}
                   creator={moment.creatorName ?? undefined}
                   year={yearDisplay ?? undefined}
                 />

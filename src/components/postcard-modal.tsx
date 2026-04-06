@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { toPng } from "html-to-image";
 
 type Props = {
   imageUrl: string;
   title: string;
+  slug: string;
   creator?: string;
   year?: string;
 };
@@ -53,12 +55,13 @@ function Stamp() {
   );
 }
 
-export function PostcardModal({ imageUrl, title, creator, year }: Props) {
+export function PostcardModal({ imageUrl, title, slug, creator, year }: Props) {
   const [open, setOpen] = useState(false);
   const [toValue, setToValue] = useState("");
   const [fromValue, setFromValue] = useState("");
   const [messageValue, setMessageValue] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
+  const postcardRef = useRef<HTMLDivElement>(null);
 
   // Close on Escape
   useEffect(() => {
@@ -83,23 +86,23 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
   }, [open]);
 
   async function handleShare() {
-    const shareText = [
-      title,
-      creator && year ? `${creator}, ${year}` : creator || year || "",
-      messageValue ? `"${messageValue}"` : "",
-      window.location.href,
-    ]
-      .filter(Boolean)
-      .join("\n");
+    if (!postcardRef.current) return;
 
-    if (navigator.share) {
+    const dataUrl = await toPng(postcardRef.current, { pixelRatio: 2 });
+    const blob = await (await fetch(dataUrl)).blob();
+    const file = new File([blob], `postcard-${slug}.png`, { type: "image/png" });
+
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
       try {
-        await navigator.share({ title, text: shareText, url: window.location.href });
+        await navigator.share({ files: [file], title });
       } catch {
         // User cancelled
       }
     } else {
-      await navigator.clipboard.writeText(shareText);
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = file.name;
+      a.click();
     }
   }
 
@@ -135,6 +138,7 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
 
           {/* Postcard */}
           <div
+            ref={postcardRef}
             className="bg-white"
             style={{
               boxShadow: "0 4px 30px rgba(0,0,0,0.10), 0 0 0 1px rgba(0,0,0,0.03)",
@@ -208,9 +212,9 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                     type="text"
                     value={toValue}
                     onChange={(e) => setToValue(e.target.value)}
-                    className="w-full bg-transparent font-body text-foreground outline-none"
+                    className="w-full bg-transparent text-foreground outline-none font-[family-name:var(--font-biro-script)]"
                     style={{
-                      fontSize: "14px",
+                      fontSize: "16px",
                       borderBottom: "1px solid #d4d4d4",
                       paddingBottom: "8px",
                     }}
@@ -228,9 +232,9 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                     type="text"
                     value={fromValue}
                     onChange={(e) => setFromValue(e.target.value)}
-                    className="w-full bg-transparent font-body text-foreground outline-none"
+                    className="w-full bg-transparent text-foreground outline-none font-[family-name:var(--font-biro-script)]"
                     style={{
-                      fontSize: "14px",
+                      fontSize: "16px",
                       borderBottom: "1px solid #d4d4d4",
                       paddingBottom: "8px",
                     }}
@@ -247,9 +251,9 @@ export function PostcardModal({ imageUrl, title, creator, year }: Props) {
                   <textarea
                     value={messageValue}
                     onChange={(e) => setMessageValue(e.target.value)}
-                    className="w-full bg-transparent font-body text-foreground outline-none resize-none"
+                    className="w-full bg-transparent text-foreground outline-none resize-none font-[family-name:var(--font-biro-script)]"
                     style={{
-                      fontSize: "14px",
+                      fontSize: "16px",
                       height: "100%",
                       backgroundImage:
                         "repeating-linear-gradient(transparent, transparent 27px, #d4d4d4 27px, #d4d4d4 28px)",
