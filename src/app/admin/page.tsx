@@ -235,6 +235,21 @@ export default function AdminPage() {
       if (data.images && Array.isArray(data.images) && data.images.length > 0) {
         setExtractedImages(data.images);
       }
+
+      // Surface the "succeeded but found nothing" case so the user isn't left
+      // staring at a button that did nothing. Common cause: the page is
+      // JavaScript-rendered, so the server-side fetch only sees an empty shell.
+      const gotSomething =
+        data.title ||
+        data.creator ||
+        data.category ||
+        data.year ||
+        (Array.isArray(data.images) && data.images.length > 0);
+      if (!gotSomething) {
+        setPrefillError(
+          "Couldn't extract anything from this page — it may be JavaScript-rendered or blocking scrapers. Fill the fields in manually, or try a more static source URL."
+        );
+      }
     } catch (error) {
       setPrefillError(error instanceof Error ? error.message : "Failed to fetch URL");
     } finally {
