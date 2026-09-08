@@ -136,6 +136,19 @@ const moments = [
       "Good design is as little design as possible. Rams wrote it in the 1970s and it's still the north star. These ten principles aren't rules — they're a way of seeing. Return to them often.",
     tags: JSON.stringify(["principles", "industrial-design", "classic", "philosophy"]),
   },
+  {
+    slug: "oscar-dumlao-water-playground",
+    title: "Oscar Dumlao's Water Playground",
+    category: "Interfaces",
+    creatorName: "Oscar Dumlao",
+    creatorUrl: "https://oscardumlao.com",
+    sourceUrl: "https://oscardumlao.com",
+    // TODO: replace with a Vercel Blob URL after uploading a screen capture
+    imageUrl: null,
+    description:
+      "A portfolio that refuses to be one. Dumlao replaced the case-study scroll with a WebGL water surface that ripples wherever you drag the cursor — the whole site is one interaction, held for as long as you want to play with it. It is a confident bet: prove you can build a feeling, and the résumé becomes unnecessary.",
+    tags: JSON.stringify(["web", "interactive", "webgl", "portfolio"]),
+  },
 ];
 
 async function main() {
