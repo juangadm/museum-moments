@@ -102,7 +102,7 @@ export function Header() {
             <p className="hidden sm:block text-[12px] text-black font-body">
               an exhibition{" "}
               <button
-                onClick={() => window.open("https://juangabriel.xyz", "_blank")}
+                onClick={() => window.open("https://juangabriel.org", "_blank")}
                 className="text-black hover:text-[#A0A0A0] transition-colors cursor-pointer"
               >
                 <span className="underline decoration-1 underline-offset-4">curated</span>
@@ -190,7 +190,7 @@ export function Header() {
                   <p className="text-[10px] text-foreground-muted font-body">
                     by{" "}
                     <a
-                      href="https://juangabriel.xyz"
+                      href="https://juangabriel.org"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline hover:text-foreground transition-colors"

@@ -6,7 +6,7 @@
 > hands. An exhibition curated to build the beautiful in the age of AI.
 
 ## Creator
-Curated by Juan Gabriel Delgado (https://juangabriel.xyz)
+Curated by Juan Gabriel Delgado (https://juangabriel.org)
 
 ## Sections
 - / — Masonry grid of curated design moments, filterable by category

@@ -117,7 +117,7 @@ export default function RootLayout({
                 founder: {
                   "@type": "Person",
                   name: "Juan Gabriel Delgado",
-                  url: "https://juangabriel.xyz",
+                  url: "https://juangabriel.org",
                 },
                 sameAs: [
                   "https://x.com/juangadm_",
