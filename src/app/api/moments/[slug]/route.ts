@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { updateMoment, DataError } from "@/lib/moments";
 import { validateMomentUpdate } from "@/lib/validation";
+
+// Moment pages are statically cached; refresh them (and neighbours' prev/next/related links) after a change
+function revalidateMomentPages() {
+  revalidatePath("/");
+  revalidatePath("/m/[slug]", "page");
+}
 
 // DELETE /api/moments/[slug] - Delete a single moment (admin only)
 export async function DELETE(
@@ -28,6 +35,7 @@ export async function DELETE(
     }
 
     await db.moment.delete({ where: { slug } });
+    revalidateMomentPages();
 
     return NextResponse.json({ success: true, deleted: slug });
   } catch (error) {
@@ -74,6 +82,7 @@ export async function PATCH(
 
     // Update the moment
     const updated = await updateMoment(slug, updateData);
+    revalidateMomentPages();
 
     return NextResponse.json({ success: true, moment: updated });
   } catch (error) {

@@ -105,15 +105,16 @@ Think the motion through before recording: where does it start, what moves, how 
 | `category` | Exactly one of: **Branding** (logos, identity) · **Images** (photo, illustration, posters) · **Interfaces** (web, apps, product UI) · **Objects** (physical products, packaging) · **Spaces** (architecture, interiors) · **Typography** (typefaces, lettering). |
 | `description` | 2–4 sentences. The user's bullets are the spine — keep their point of view and any memorable phrasing. Editorial and specific: name what to look at and why it works. Calm museum-label voice; no hype words ("stunning", "amazing", "game-changer"), no emoji. |
 | `tags` | 3–6 lowercase, hyphenated. Prefer existing ones (`src/lib/constants.ts` TAG_SUGGESTIONS). |
-| `year` | Only if clearly stated (launch date, © year of the work). Otherwise omit. |
+| `year` | Always try: launch post, blog/changelog dates, press, © year, meta dates. Clearly stated → use it. Only a hint (e.g. a © year that may just be the current year) → propose it as approximate (`yearApproximate: true`). Nothing found → leave it blank and ask the curator in step 5. Never publish without a year or an explicit "no year". |
 
 No bullets from the user? Write the description from what you observed and say so in one line.
 
 ## 5. Show the options (one message)
 
 1. Send both media files with `SendUserFile` (`display: "render"`), captioned "Option 1 — …" / "Option 2 — …" in a few words.
-2. In text: the full draft, compact — title · creator · category · tags, then the description.
+2. In text: the full draft, compact — title · creator · category · year · tags, then the description. Say in a few words where the year came from (or that you couldn't find one).
 3. Ask with `AskUserQuestion`: options **"Ship option 1"** and **"Ship option 2"** (the built-in "Other" is their free-text field for changes, e.g. "2 but slower", "warmer description", "record the footer instead").
+   If the year is approximate or missing, add a second question in the same call: "What year should it show?" with options like **"c. <year> (approximate)"**, **"<year> (exact)"** and **"No year"** — the curator's "Other" lets them type a different year.
 
 Free-text reply → apply it, show only what changed, ask again. Aim for at most one revision round.
 
@@ -131,7 +132,7 @@ curl -sS -X POST https://museum-moments.com/api/moments \
   -H "x-admin-password: $ADMIN_PASSWORD" -H "Content-Type: application/json" -d @moment.json
 ```
 
-`moment.json`: `{ title, category, description, sourceUrl, creatorName, creatorUrl, tags: [...], year, imageUrl: <uploaded url> }`. Slug is generated from the title; on `409` (slug taken) add a short suffix via `"slug"`.
+`moment.json`: `{ title, category, description, sourceUrl, creatorName, creatorUrl, tags: [...], year, yearApproximate, imageUrl: <uploaded url> }`. Slug is generated from the title; on `409` (slug taken) add a short suffix via `"slug"`.
 
 ## 7. Verify, then hand back the link
 
