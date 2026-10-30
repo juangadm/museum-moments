@@ -15,9 +15,7 @@
     "db:studio": "prisma studio",
     "db:import": "tsx scripts/bulk-import.ts",
     "notion:sync": "tsx scripts/notion-sync-api.ts",
-    "db:backfill-years": "npx tsx scripts/backfill-years.ts",
-    "capture": "tsx scripts/capture.ts",
-    "publish-moment": "tsx scripts/publish-moment.ts"
+    "db:backfill-years": "npx tsx scripts/backfill-years.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
@@ -46,7 +44,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "jsdom": "^27.4.0",
-    "playwright": "^1.63.0",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5",

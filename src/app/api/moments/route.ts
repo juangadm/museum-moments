@@ -4,38 +4,6 @@ import { extractDominantColor } from "@/lib/color-extractor";
 import { validateMomentInput } from "@/lib/validation";
 import { generateTags } from "@/lib/auto-tagger";
 import { generateSlug } from "@/lib/utils";
-import { SITE_URL } from "@/lib/constants";
-
-// GET /api/moments?since=ISO_DATE - Recently published moments (public data, used for digests)
-export async function GET(request: Request) {
-  const sinceParam = new URL(request.url).searchParams.get("since");
-  const since = sinceParam ? new Date(sinceParam) : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  if (Number.isNaN(since.getTime())) {
-    return NextResponse.json({ error: "Invalid since date" }, { status: 400 });
-  }
-
-  const moments = await db.moment.findMany({
-    where: { publishedAt: { gte: since } },
-    orderBy: { publishedAt: "desc" },
-    take: 50,
-    select: {
-      slug: true,
-      title: true,
-      category: true,
-      creatorName: true,
-      sourceUrl: true,
-      imageUrl: true,
-      description: true,
-      tags: true,
-      publishedAt: true,
-    },
-  });
-
-  return NextResponse.json({
-    since: since.toISOString(),
-    moments: moments.map((m) => ({ ...m, tags: JSON.parse(m.tags) as string[], url: `${SITE_URL}/m/${m.slug}` })),
-  });
-}
 
 // DELETE /api/moments - Clear all moments (admin only)
 export async function DELETE(request: Request) {
@@ -111,18 +79,13 @@ export async function POST(request: Request) {
       );
     }
 
-    // Use a provided color (e.g. from a video's poster frame), else extract from image
-    let dominantColor: string | null =
-      typeof data.dominantColor === "string" && /^#[0-9a-f]{6}$/i.test(data.dominantColor)
-        ? data.dominantColor
-        : null;
-    if (!dominantColor) {
-      try {
-        dominantColor = await extractDominantColor(imageUrl);
-      } catch (e) {
-        console.error("Failed to extract color:", e);
-        dominantColor = "#1a1a1a"; // fallback
-      }
+    // Extract dominant color from image
+    let dominantColor: string | null = null;
+    try {
+      dominantColor = await extractDominantColor(imageUrl);
+    } catch (e) {
+      console.error("Failed to extract color:", e);
+      dominantColor = "#1a1a1a"; // fallback
     }
 
     // Parse tags - accept array or comma-separated string
