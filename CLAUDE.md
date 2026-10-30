@@ -108,7 +108,10 @@ The core entity is `Moment` (see `prisma/schema.prisma`). Fields include:
 
 ### Adding a New Moment
 
-**Via Admin UI (Recommended):**
+**From a link (fastest — works from a phone in a cloud session):**
+Send Claude the URL plus a few bullets on what you like. Claude follows `.claude/skills/add-moment/SKILL.md`: captures a still or a short scroll/animation recording with a real browser, drafts every field, shows two options, and publishes only after you pick one. Requires Full network access and `ADMIN_PASSWORD` set in the cloud environment.
+
+**Via Admin UI:**
 1. Go to `/admin` and enter your password
 2. Fill in the form and upload an image
 3. Click Save - moment appears immediately
