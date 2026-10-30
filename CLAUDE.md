@@ -208,6 +208,12 @@ Storage limit: 1GB on free tier.
 
 ---
 
+## Git Workflow
+
+Single contributor: commit and push straight to `main` — no branches or PRs. Every push to `main` auto-deploys on Vercel; if no deployment appears within a few minutes, check the Vercel ↔ GitHub connection (Vercel → Settings → Git).
+
+---
+
 ## Deployment & Prisma Migrations
 
 ### How Migrations Run in Production
